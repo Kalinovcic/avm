@@ -19,3 +19,15 @@
 *.exe
 *.out
 *.app
+
+# Project Files
+.project
+.cproject
+Debug/*
+Debug/src/*
+/Debug/
+
+# Aspel Files
+*.aml
+*.aspel
+*.aby
