@@ -44,6 +44,12 @@ typedef u32      asize;
 #define AVMEXIT_INTERNLOGIC             0xFFCA0000
 #define AVMEXIT_EOF                     0xFFCA0001
 
-#define AVMEXIT_REGLOAD                 0xFFCB0000
+#define AVMEXIT_REGINVCLEAR             0xFFCB0000
+#define AVMEXIT_REGINVLOAD              0xFFCB0001
+#define AVMEXIT_REGINVMOV               0xFFCB0002
+#define AVMEXIT_REGLAPMOV               0xFFCB0003
+#define AVMEXIT_REGINVSWAP              0xFFCB0004
+#define AVMEXIT_REGLAPSWAP              0xFFCB0005
+
 
 #endif /* ATYPE_H_ */
