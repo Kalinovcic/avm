@@ -35,36 +35,6 @@ Register::~Register()
 
 /******************************************************/
 
-void Register::clear(u8 reg)
-{
-    if(!valid(reg)) exit(AVMEXIT_REGINVCLEAR);
-    clear_unchecked(reg);
-}
-
-void Register::load(u8 reg, void* p_val)
-{
-    if(!valid(reg)) exit(AVMEXIT_REGINVLOAD);
-    load_unchecked(reg, p_val);
-}
-
-void Register::mov(u8 reg1, u8 reg2)
-{
-    if(!valid(reg1)) exit(AVMEXIT_REGINVMOV);
-    if(!valid(reg2)) exit(AVMEXIT_REGINVMOV);
-    if(overlap(reg1, reg2)) exit(AVMEXIT_REGLAPMOV);
-    mov_unchecked(reg1, reg2);
-}
-
-void Register::swap(u8 reg1, u8 reg2)
-{
-    if(!valid(reg1)) exit(AVMEXIT_REGINVMOV);
-    if(!valid(reg2)) exit(AVMEXIT_REGINVMOV);
-    if(overlap(reg1, reg2)) exit(AVMEXIT_REGLAPMOV);
-    swap_unchecked(reg1, reg2);
-}
-
-/******************************************************/
-
 bool Register::valid(u8 reg)
 {
     return ((reg >> 4) + (reg & 0xF)) < 16;
@@ -104,9 +74,21 @@ void Register::to_buffer(u8 reg)
 
 /******************************************************/
 
+void Register::clear_check(u8 reg)
+{
+    if(!valid(reg)) exit(AVMEXIT_REGINVCLEAR);
+}
+
 void Register::clear_unchecked(u8 reg)
 {
     memset(m_bytes + (reg >> 4), 0, (reg & 0xF) + 1);
+}
+
+/******************************************************/
+
+void Register::load_check(u8 reg, void* p_val)
+{
+    if(!valid(reg)) exit(AVMEXIT_REGINVLOAD);
 }
 
 void Register::load_unchecked(u8 reg, void* p_val)
@@ -114,9 +96,27 @@ void Register::load_unchecked(u8 reg, void* p_val)
     memcpy(m_bytes + (reg >> 4), p_val, (reg & 0xF) + 1);
 }
 
+/******************************************************/
+
+void Register::mov_check(u8 reg1, u8 reg2)
+{
+    if(!valid(reg1)) exit(AVMEXIT_REGINVMOV);
+    if(!valid(reg2)) exit(AVMEXIT_REGINVMOV);
+    if(overlap(reg1, reg2)) exit(AVMEXIT_REGLAPMOV);
+}
+
 void Register::mov_unchecked(u8 reg1, u8 reg2)
 {
     load_register(reg2, (reg1 & 0xF) + 1, m_bytes + (reg1 >> 4));
+}
+
+/******************************************************/
+
+void Register::swap_check(u8 reg1, u8 reg2)
+{
+    if(!valid(reg1)) exit(AVMEXIT_REGINVSWAP);
+    if(!valid(reg2)) exit(AVMEXIT_REGINVSWAP);
+    if(overlap(reg1, reg2)) exit(AVMEXIT_REGLAPSWAP);
 }
 
 void Register::swap_unchecked(u8 reg1, u8 reg2)

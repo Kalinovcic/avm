@@ -26,8 +26,9 @@
 
 #include "atype.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
 #define REGISTER_AH     0x00
 #define REGISTER_AL     0x10
@@ -69,25 +70,38 @@ public:
     Register();
     ~Register();
 
-    inline void clear(u8 reg);
-    inline void load(u8 reg, void* p_val);
-    inline void mov(u8 reg1, u8 reg2);
-    inline void swap(u8 reg1, u8 reg2);
+    inline void clear(u8 reg)               { clear_check(reg);         clear_unchecked(reg); }
+    inline void load(u8 reg, void* p_val)   { load_check(reg, p_val);   load_unchecked(reg, p_val); }
+    inline void mov(u8 reg1, u8 reg2)       { mov_check(reg1, reg2);    mov_unchecked(reg1, reg2); }
+    inline void swap(u8 reg1, u8 reg2)      { swap_check(reg1, reg2);   swap_unchecked(reg1, reg2); }
 
+    inline void util_load8(u8 reg, u8 val)   { load_check(reg, &val); load_register(reg, 1, &val); }
+    inline void util_load16(u8 reg, u16 val) { load_check(reg, &val); load_register(reg, 2, &val); }
+    inline void util_load32(u8 reg, u32 val) { load_check(reg, &val); load_register(reg, 4, &val); }
+    inline void util_load64(u8 reg, u64 val) { load_check(reg, &val); load_register(reg, 8, &val); }
+
+    inline void debug(u8 reg)
+    {
+        printf("%d\n", *((int*) (m_bytes + (reg >> 4))));
+    }
 private:
     u8 m_bytes[16];
     u8 m_buff[16];
 
-    inline bool valid(u8 reg);
-    inline bool overlap(u8 reg1, u8 reg2);
+    bool valid(u8 reg);
+    bool overlap(u8 reg1, u8 reg2);
 
-    inline void load_register(u8 reg, u8 srcsize, void* src);
-    inline void to_buffer(u8 reg);
+    void load_register(u8 reg, u8 srcsize, void* src);
+    void to_buffer(u8 reg);
 
-    inline void clear_unchecked(u8 reg);
-    inline void load_unchecked(u8 reg, void* p_val);
-    inline void mov_unchecked(u8 reg1, u8 reg2);
-    inline void swap_unchecked(u8 reg1, u8 reg2);
+    void clear_check(u8 reg);
+    void clear_unchecked(u8 reg);
+    void load_check(u8 reg, void* p_val);
+    void load_unchecked(u8 reg, void* p_val);
+    void mov_check(u8 reg1, u8 reg2);
+    void mov_unchecked(u8 reg1, u8 reg2);
+    void swap_check(u8 reg1, u8 reg2);
+    void swap_unchecked(u8 reg1, u8 reg2);
 };
 
 #endif /* REG_H_ */

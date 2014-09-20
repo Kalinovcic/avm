@@ -26,8 +26,22 @@
 #include <cstdlib>
 #include <cstdio>
 
+#include "atype.h"
+#include "reg.h"
+
 int main(int argc, char** argv)
 {
+    int i5 = 5;
+    int i16 = 16;
+    float f14p6 = 14.6f;
+
+    Register reg;
+    reg.load(REGISTER_EAB, &i5);
+    reg.load(REGISTER_ECD, &i16);
+    reg.clear(REGISTER_EAB);
+
+    reg.debug(REGISTER_EAB);
+    reg.debug(REGISTER_ECD);
 
     return EXIT_SUCCESS;
 }
