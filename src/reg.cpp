@@ -195,13 +195,181 @@ void Register::div_noc(u8 reg1, u8 reg2)
 
 void Register::idiv_noc(u8 reg1, u8 reg2)
 {
-    i64 val = getval(reg2);
+    i64 val = getival(reg2);
     switch((reg1 & 0xF) + 1)
     {
     case 1: (*((i8 *) (m_bytes + (reg1 >> 4)))) /= val; break;
     case 2: (*((i16*) (m_bytes + (reg1 >> 4)))) /= val; break;
     case 4: (*((i32*) (m_bytes + (reg1 >> 4)))) /= val; break;
     case 8: (*((i64*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    }
+}
+
+void Register::fadd_noc(u8 reg1, u8 reg2)
+{
+    f64 val = getfval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) += val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) += val; break;
+    }
+}
+
+void Register::fiadd_noc(u8 reg1, u8 reg2)
+{
+    i64 val = getival(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) += val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) += val; break;
+    }
+}
+
+void Register::fuadd_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) += val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) += val; break;
+    }
+}
+
+void Register::fsub_noc(u8 reg1, u8 reg2)
+{
+    f64 val = getfval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    }
+}
+
+void Register::fisub_noc(u8 reg1, u8 reg2)
+{
+    i64 val = getival(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    }
+}
+
+void Register::fisubr_noc(u8 reg1, u8 reg2)
+{
+    f64 val = getfval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((i8 *) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 2: (*((i16*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 4: (*((i32*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 8: (*((i64*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    }
+}
+
+void Register::fusub_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    }
+}
+
+void Register::fusubr_noc(u8 reg1, u8 reg2)
+{
+    f64 val = getfval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    }
+}
+
+void Register::fmul_noc(u8 reg1, u8 reg2)
+{
+    f64 val = getfval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) *= val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) *= val; break;
+    }
+}
+
+void Register::fimul_noc(u8 reg1, u8 reg2)
+{
+    i64 val = getival(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) *= val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) *= val; break;
+    }
+}
+
+void Register::fumul_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) *= val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) *= val; break;
+    }
+}
+
+void Register::fdiv_noc(u8 reg1, u8 reg2)
+{
+    f64 val = getfval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    }
+}
+
+void Register::fidiv_noc(u8 reg1, u8 reg2)
+{
+    i64 val = getival(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    }
+}
+
+void Register::fidivr_noc(u8 reg1, u8 reg2)
+{
+    f64 val = getfval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((i8 *) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 2: (*((i16*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 4: (*((i32*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 8: (*((i64*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    }
+}
+
+void Register::fudiv_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 4: (*((f32*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 8: (*((f64*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    }
+}
+
+void Register::fudivr_noc(u8 reg1, u8 reg2)
+{
+    f64 val = getfval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) /= val; break;
     }
 }
 

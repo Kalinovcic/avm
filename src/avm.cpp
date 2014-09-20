@@ -31,19 +31,13 @@
 
 int main(int argc, char** argv)
 {
-    int i5 = 5;
-    int i16 = 16;
-
     Register reg;
-    reg.util_load32(REGISTER_EAB, i5);
-    reg.util_load32(REGISTER_ECD, i16);
+    reg.util_load32f(REGISTER_EAB, 15.4);
+    reg.util_load32(REGISTER_ECD, -3);
 
-    reg.inc(REGISTER_EAB);
-    reg.dec(REGISTER_ECD);
-    reg.neg(REGISTER_ECD);
-    reg.idiv(REGISTER_ECD, REGISTER_EAB);
+    reg.fisub(REGISTER_EAB, REGISTER_ECD);
 
-    reg.debug(REGISTER_EAB);
+    reg.debug2(REGISTER_EAB);
     reg.debug(REGISTER_ECD);
 
     return EXIT_SUCCESS;

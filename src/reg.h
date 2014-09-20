@@ -70,29 +70,45 @@ public:
     Register();
     ~Register();
 
-    inline void clear(u8 reg)               { clear_check(reg);       clear_noc(reg);       }
-    inline void load(u8 reg, void* p_val)   { load_check(reg, p_val); load_noc(reg, p_val); }
-    inline void mov(u8 reg1, u8 reg2)       { mov_check(reg1, reg2);  mov_noc(reg1, reg2);  }
-    inline void swap(u8 reg1, u8 reg2)      { swap_check(reg1, reg2); swap_noc(reg1, reg2); }
+    inline void clear(u8 reg)               { clear_check(reg);         clear_noc(reg);         }
+    inline void load(u8 reg, void* p_val)   { load_check(reg, p_val);   load_noc(reg, p_val);   }
+    inline void mov(u8 reg1, u8 reg2)       { mov_check(reg1, reg2);    mov_noc(reg1, reg2);    }
+    inline void swap(u8 reg1, u8 reg2)      { swap_check(reg1, reg2);   swap_noc(reg1, reg2);   }
+    inline void inc(u8 reg)                 { inc_check(reg);           inc_noc(reg);           }
+    inline void dec(u8 reg)                 { dec_check(reg);           dec_noc(reg);           }
+    inline void neg(u8 reg)                 { neg_check(reg);           neg_noc(reg);           }
+    inline void add(u8 reg1, u8 reg2)       { add_check(reg1, reg2);    add_noc(reg1, reg2);    }
+    inline void sub(u8 reg1, u8 reg2)       { sub_check(reg1, reg2);    sub_noc(reg1, reg2);    }
+    inline void mul(u8 reg1, u8 reg2)       { mul_check(reg1, reg2);    mul_noc(reg1, reg2);    }
+    inline void div(u8 reg1, u8 reg2)       { div_check(reg1, reg2);    div_noc(reg1, reg2);    }
+    inline void idiv(u8 reg1, u8 reg2)      { idiv_check(reg1, reg2);   idiv_noc(reg1, reg2);   }
+    inline void fadd(u8 reg1, u8 reg2)      { fadd_check(reg1, reg2);   fadd_noc(reg1, reg2);   }
+    inline void fiadd(u8 reg1, u8 reg2)     { fiadd_check(reg1, reg2);  fiadd_noc(reg1, reg2);  }
+    inline void fuadd(u8 reg1, u8 reg2)     { fuadd_check(reg1, reg2);  fuadd_noc(reg1, reg2);  }
+    inline void fsub(u8 reg1, u8 reg2)      { fsub_check(reg1, reg2);   fsub_noc(reg1, reg2);   }
+    inline void fisub(u8 reg1, u8 reg2)     { fisub_check(reg1, reg2);  fisub_noc(reg1, reg2);  }
+    inline void fisubr(u8 reg1, u8 reg2)    { fisubr_check(reg1, reg2); fisubr_noc(reg1, reg2); }
+    inline void fusub(u8 reg1, u8 reg2)     { fusub_check(reg1, reg2);  fusub_noc(reg1, reg2);  }
+    inline void fusubr(u8 reg1, u8 reg2)    { fusubr_check(reg1, reg2); fusubr_noc(reg1, reg2); }
+    inline void fmul(u8 reg1, u8 reg2)      { fmul_check(reg1, reg2);   fmul_noc(reg1, reg2);   }
+    inline void fimul(u8 reg1, u8 reg2)     { fimul_check(reg1, reg2);  fimul_noc(reg1, reg2);  }
+    inline void fumul(u8 reg1, u8 reg2)     { fumul_check(reg1, reg2);  fumul_noc(reg1, reg2);  }
+    inline void fdiv(u8 reg1, u8 reg2)      { fdiv_check(reg1, reg2);   fdiv_noc(reg1, reg2);   }
+    inline void fidiv(u8 reg1, u8 reg2)     { fidiv_check(reg1, reg2);  fidiv_noc(reg1, reg2);  }
+    inline void fidivr(u8 reg1, u8 reg2)    { fidivr_check(reg1, reg2); fidivr_noc(reg1, reg2); }
+    inline void fudiv(u8 reg1, u8 reg2)     { fudiv_check(reg1, reg2);  fudiv_noc(reg1, reg2);  }
+    inline void fudivr(u8 reg1, u8 reg2)    { fudivr_check(reg1, reg2); fudivr_noc(reg1, reg2); }
+    inline void fneg(u8 reg1, u8 reg2)      { fneg_check(reg1, reg2);   fneg_noc(reg1, reg2);   }
 
-    inline void util_load8(u8 reg, u8 val)   { load_check(reg, &val); loadreg(reg, 1, &val); }
-    inline void util_load16(u8 reg, u16 val) { load_check(reg, &val); loadreg(reg, 2, &val); }
-    inline void util_load32(u8 reg, u32 val) { load_check(reg, &val); loadreg(reg, 4, &val); }
-    inline void util_load64(u8 reg, u64 val) { load_check(reg, &val); loadreg(reg, 8, &val); }
+    inline void util_load8(u8 reg, u8 val)    { load_check(reg, &val); loadreg(reg, 1, &val); }
+    inline void util_load16(u8 reg, u16 val)  { load_check(reg, &val); loadreg(reg, 2, &val); }
+    inline void util_load32(u8 reg, u32 val)  { load_check(reg, &val); loadreg(reg, 4, &val); }
+    inline void util_load32f(u8 reg, f32 val) { load_check(reg, &val); loadreg(reg, 4, &val); }
+    inline void util_load64(u8 reg, u64 val)  { load_check(reg, &val); loadreg(reg, 8, &val); }
+    inline void util_load64f(u8 reg, f64 val) { load_check(reg, &val); loadreg(reg, 8, &val); }
 
-    inline void inc(u8 reg)                 { inc_check(reg);           inc_noc(reg);         }
-    inline void dec(u8 reg)                 { dec_check(reg);           dec_noc(reg);         }
-    inline void neg(u8 reg)                 { neg_check(reg);           neg_noc(reg);         }
-    inline void add(u8 reg1, u8 reg2)       { add_check(reg1, reg2);    add_noc(reg1, reg2);  }
-    inline void sub(u8 reg1, u8 reg2)       { sub_check(reg1, reg2);    sub_noc(reg1, reg2);  }
-    inline void mul(u8 reg1, u8 reg2)       { mul_check(reg1, reg2);    mul_noc(reg1, reg2);  }
-    inline void div(u8 reg1, u8 reg2)       { div_check(reg1, reg2);    div_noc(reg1, reg2);  }
-    inline void idiv(u8 reg1, u8 reg2)      { idiv_check(reg1, reg2);   idiv_noc(reg1, reg2); }
-
-    inline void debug(u8 reg)
-    {
-        printf("%d\n", *((int*) (m_bytes + (reg >> 4))));
-    }
+    inline void debug(u8 reg) { printf("%d\n", *((i32*) (m_bytes + (reg >> 4)))); }
+    inline void debug2(u8 reg) { printf("%f\n", *((f32*) (m_bytes + (reg >> 4)))); }
 private:
     u8 m_bytes[16];
     u8 m_buff[16];
@@ -124,6 +140,18 @@ private:
         return 0;
     }
 
+    inline i64 getival(u8 reg)
+    {
+        switch((reg & 0xF) + 1)
+        {
+        case 1: return (i8) tou8(reg);
+        case 2: return (i16) tou16(reg);
+        case 4: return (i32) tou32(reg);
+        case 8: return (i64) tou64(reg);
+        }
+        return 0;
+    }
+
     inline f64 getfval(u8 reg)
     {
         switch((reg & 0xF) + 1)
@@ -131,6 +159,7 @@ private:
         case 4: return tof32(reg);
         case 8: return tof64(reg);
         }
+        return 0.0;
     }
 
     inline void scheck1(u8 r, bool f, int ec)
@@ -141,8 +170,7 @@ private:
 
     inline void scheck2nl(u8 r1, bool f1, u8 r2, bool f2, int ec)
     {
-        scheck1(r1, f1, ec);
-        scheck1(r2, f2, ec);
+        scheck1(r1, f1, ec); scheck1(r2, f2, ec);
     }
 
     inline void scheck2(u8 r1, bool f1, u8 r2, bool f2, int ecinv, int eclap)
@@ -202,6 +230,23 @@ private:
     void mul_noc(u8 reg1, u8 reg2);
     void div_noc(u8 reg1, u8 reg2);
     void idiv_noc(u8 reg1, u8 reg2);
+    void fadd_noc(u8 reg1, u8 reg2);
+    void fiadd_noc(u8 reg1, u8 reg2);
+    void fuadd_noc(u8 reg1, u8 reg2);
+    void fsub_noc(u8 reg1, u8 reg2);
+    void fisub_noc(u8 reg1, u8 reg2);
+    void fisubr_noc(u8 reg1, u8 reg2);
+    void fusub_noc(u8 reg1, u8 reg2);
+    void fusubr_noc(u8 reg1, u8 reg2);
+    void fmul_noc(u8 reg1, u8 reg2);
+    void fimul_noc(u8 reg1, u8 reg2);
+    void fumul_noc(u8 reg1, u8 reg2);
+    void fdiv_noc(u8 reg1, u8 reg2);
+    void fidiv_noc(u8 reg1, u8 reg2);
+    void fidivr_noc(u8 reg1, u8 reg2);
+    void fudiv_noc(u8 reg1, u8 reg2);
+    void fudivr_noc(u8 reg1, u8 reg2);
+    void fneg_noc(u8 reg1, u8 reg2);
 };
 
 #endif /* REG_H_ */
