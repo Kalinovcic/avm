@@ -26,30 +26,8 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include "bcode.h"
-
 int main(int argc, char** argv)
 {
-    FILE* file = fopen("../aspelc/test.aby", "r");
-    fseek(file, 0, SEEK_END);
-    u32 filesize = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    u8* bcraw = new u8[filesize];
-    fread(bcraw, 1, filesize, file);
-    fclose(file);
-
-    Bytecode* bytecode = new Bytecode(bcraw, bcraw + filesize);
-
-    char* str = (char*) bytecode->nextString();
-    u32 num = bytecode->next16();
-    bytecode->next();
-    char* str2 = (char*) bytecode->nextString();
-
-    fprintf(stdout, "%s\n%d\n%s\n", str, num, str2);
-
-    delete bytecode;
-    delete[] bcraw;
 
     return EXIT_SUCCESS;
 }
