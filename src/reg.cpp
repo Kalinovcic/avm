@@ -37,7 +37,12 @@ Register::~Register()
 
 bool Register::valid(u8 reg)
 {
-    return ((reg >> 4) + (reg & 0xF)) < 16;
+    u8 pos = reg >> 4;
+    u8 size = (reg & 0xF) + 1;
+    return (pos + size - 1 < 16)
+        && !(pos % size)
+        && !((size & (size - 1)))
+        && (size != 16);
 }
 
 bool Register::overlap(u8 reg1, u8 reg2)
@@ -51,7 +56,7 @@ bool Register::overlap(u8 reg1, u8 reg2)
 
 /******************************************************/
 
-void Register::load_register(u8 reg, u8 srcsize, void* src)
+void Register::loadreg(u8 reg, u8 srcsize, void* src)
 {
     u8 pos = reg >> 4;
     u8 size = (reg & 0xF) + 1;
@@ -66,7 +71,7 @@ void Register::load_register(u8 reg, u8 srcsize, void* src)
     }
 }
 
-void Register::to_buffer(u8 reg)
+void Register::tobuff(u8 reg)
 {
     memset(m_buff, 0, 16);
     memcpy(m_buff, m_bytes + (reg >> 4), (reg & 0xF) + 1);
@@ -74,54 +79,138 @@ void Register::to_buffer(u8 reg)
 
 /******************************************************/
 
-void Register::clear_check(u8 reg)
+void Register::stdcheck_one(u8 reg, int ecinv)
 {
-    if(!valid(reg)) exit(AVMEXIT_REGINVCLEAR);
+    if(!valid(reg)) exit(ecinv);
 }
 
-void Register::clear_unchecked(u8 reg)
+void Register::stdcheck_two(u8 reg1, u8 reg2, int ecinv, int eclap)
+{
+    if(!valid(reg1)) exit(ecinv);
+    if(!valid(reg2)) exit(ecinv);
+    if(overlap(reg1, reg2)) exit(eclap);
+}
+
+void Register::stdcheck_two_nolap(u8 reg1, u8 reg2, int ecinv)
+{
+    if(!valid(reg1)) exit(ecinv);
+    if(!valid(reg2)) exit(ecinv);
+}
+
+/******************************************************/
+
+void Register::clear_noc(u8 reg)
 {
     memset(m_bytes + (reg >> 4), 0, (reg & 0xF) + 1);
 }
 
-/******************************************************/
-
-void Register::load_check(u8 reg, void* p_val)
-{
-    if(!valid(reg)) exit(AVMEXIT_REGINVLOAD);
-}
-
-void Register::load_unchecked(u8 reg, void* p_val)
+void Register::load_noc(u8 reg, void* p_val)
 {
     memcpy(m_bytes + (reg >> 4), p_val, (reg & 0xF) + 1);
 }
 
-/******************************************************/
-
-void Register::mov_check(u8 reg1, u8 reg2)
+void Register::mov_noc(u8 reg1, u8 reg2)
 {
-    if(!valid(reg1)) exit(AVMEXIT_REGINVMOV);
-    if(!valid(reg2)) exit(AVMEXIT_REGINVMOV);
-    if(overlap(reg1, reg2)) exit(AVMEXIT_REGLAPMOV);
+    loadreg(reg2, (reg1 & 0xF) + 1, m_bytes + (reg1 >> 4));
 }
 
-void Register::mov_unchecked(u8 reg1, u8 reg2)
+void Register::swap_noc(u8 reg1, u8 reg2)
 {
-    load_register(reg2, (reg1 & 0xF) + 1, m_bytes + (reg1 >> 4));
+    tobuff(reg1);
+    loadreg(reg1, (reg2 & 0xF) + 1, m_bytes + (reg2 >> 4));
+    loadreg(reg2, 16, m_buff);
 }
 
-/******************************************************/
-
-void Register::swap_check(u8 reg1, u8 reg2)
+void Register::inc_noc(u8 reg)
 {
-    if(!valid(reg1)) exit(AVMEXIT_REGINVSWAP);
-    if(!valid(reg2)) exit(AVMEXIT_REGINVSWAP);
-    if(overlap(reg1, reg2)) exit(AVMEXIT_REGLAPSWAP);
+    switch((reg & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg >> 4))))++; break;
+    case 2: (*((u16*) (m_bytes + (reg >> 4))))++; break;
+    case 4: (*((u32*) (m_bytes + (reg >> 4))))++; break;
+    case 8: (*((u64*) (m_bytes + (reg >> 4))))++; break;
+    }
 }
 
-void Register::swap_unchecked(u8 reg1, u8 reg2)
+void Register::dec_noc(u8 reg)
 {
-    to_buffer(reg1);
-    load_register(reg1, (reg2 & 0xF) + 1, m_bytes + (reg2 >> 4));
-    load_register(reg2, 16, m_buff);
+    switch((reg & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg >> 4))))--; break;
+    case 2: (*((u16*) (m_bytes + (reg >> 4))))--; break;
+    case 4: (*((u32*) (m_bytes + (reg >> 4))))--; break;
+    case 8: (*((u64*) (m_bytes + (reg >> 4))))--; break;
+    }
 }
+
+void Register::neg_noc(u8 reg)
+{
+    switch((reg & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg >> 4)))) *= -1; break;
+    case 2: (*((u16*) (m_bytes + (reg >> 4)))) *= -1; break;
+    case 4: (*((u32*) (m_bytes + (reg >> 4)))) *= -1; break;
+    case 8: (*((u64*) (m_bytes + (reg >> 4)))) *= -1; break;
+    }
+}
+
+void Register::add_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) += val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) += val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) += val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) += val; break;
+    }
+}
+
+void Register::sub_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) -= val; break;
+    }
+}
+
+void Register::mul_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) *= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) *= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) *= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) *= val; break;
+    }
+}
+
+void Register::div_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    }
+}
+
+void Register::idiv_noc(u8 reg1, u8 reg2)
+{
+    i64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((i8 *) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 2: (*((i16*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 4: (*((i32*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    case 8: (*((i64*) (m_bytes + (reg1 >> 4)))) /= val; break;
+    }
+}
+

@@ -70,15 +70,24 @@ public:
     Register();
     ~Register();
 
-    inline void clear(u8 reg)               { clear_check(reg);         clear_unchecked(reg); }
-    inline void load(u8 reg, void* p_val)   { load_check(reg, p_val);   load_unchecked(reg, p_val); }
-    inline void mov(u8 reg1, u8 reg2)       { mov_check(reg1, reg2);    mov_unchecked(reg1, reg2); }
-    inline void swap(u8 reg1, u8 reg2)      { swap_check(reg1, reg2);   swap_unchecked(reg1, reg2); }
+    inline void clear(u8 reg)               { clear_check(reg);       clear_noc(reg);       }
+    inline void load(u8 reg, void* p_val)   { load_check(reg, p_val); load_noc(reg, p_val); }
+    inline void mov(u8 reg1, u8 reg2)       { mov_check(reg1, reg2);  mov_noc(reg1, reg2);  }
+    inline void swap(u8 reg1, u8 reg2)      { swap_check(reg1, reg2); swap_noc(reg1, reg2); }
 
-    inline void util_load8(u8 reg, u8 val)   { load_check(reg, &val); load_register(reg, 1, &val); }
-    inline void util_load16(u8 reg, u16 val) { load_check(reg, &val); load_register(reg, 2, &val); }
-    inline void util_load32(u8 reg, u32 val) { load_check(reg, &val); load_register(reg, 4, &val); }
-    inline void util_load64(u8 reg, u64 val) { load_check(reg, &val); load_register(reg, 8, &val); }
+    inline void util_load8(u8 reg, u8 val)   { load_check(reg, &val); loadreg(reg, 1, &val); }
+    inline void util_load16(u8 reg, u16 val) { load_check(reg, &val); loadreg(reg, 2, &val); }
+    inline void util_load32(u8 reg, u32 val) { load_check(reg, &val); loadreg(reg, 4, &val); }
+    inline void util_load64(u8 reg, u64 val) { load_check(reg, &val); loadreg(reg, 8, &val); }
+
+    inline void inc(u8 reg)                 { inc_check(reg);           inc_noc(reg);         }
+    inline void dec(u8 reg)                 { dec_check(reg);           dec_noc(reg);         }
+    inline void neg(u8 reg)                 { neg_check(reg);           neg_noc(reg);         }
+    inline void add(u8 reg1, u8 reg2)       { add_check(reg1, reg2);    add_noc(reg1, reg2);  }
+    inline void sub(u8 reg1, u8 reg2)       { sub_check(reg1, reg2);    sub_noc(reg1, reg2);  }
+    inline void mul(u8 reg1, u8 reg2)       { mul_check(reg1, reg2);    mul_noc(reg1, reg2);  }
+    inline void div(u8 reg1, u8 reg2)       { div_check(reg1, reg2);    div_noc(reg1, reg2);  }
+    inline void idiv(u8 reg1, u8 reg2)      { idiv_check(reg1, reg2);   idiv_noc(reg1, reg2); }
 
     inline void debug(u8 reg)
     {
@@ -91,17 +100,69 @@ private:
     bool valid(u8 reg);
     bool overlap(u8 reg1, u8 reg2);
 
-    void load_register(u8 reg, u8 srcsize, void* src);
-    void to_buffer(u8 reg);
+    void loadreg(u8 reg, u8 srcsize, void* src);
+    void tobuff(u8 reg);
 
-    void clear_check(u8 reg);
-    void clear_unchecked(u8 reg);
-    void load_check(u8 reg, void* p_val);
-    void load_unchecked(u8 reg, void* p_val);
-    void mov_check(u8 reg1, u8 reg2);
-    void mov_unchecked(u8 reg1, u8 reg2);
-    void swap_check(u8 reg1, u8 reg2);
-    void swap_unchecked(u8 reg1, u8 reg2);
+    inline u8 tou8(u8 reg)   { return *((u8 *) (m_bytes + (reg >> 4))); }
+    inline u16 tou16(u8 reg) { return *((u16*) (m_bytes + (reg >> 4))); }
+    inline u32 tou32(u8 reg) { return *((u32*) (m_bytes + (reg >> 4))); }
+    inline u64 tou64(u8 reg) { return *((u64*) (m_bytes + (reg >> 4))); }
+
+    inline f32 tof32(u8 reg) { return *((f32*) (m_bytes + (reg >> 4))); }
+    inline f64 tof64(u8 reg) { return *((f64*) (m_bytes + (reg >> 4))); }
+
+    inline u64 getval(u8 reg)
+    {
+        switch((reg & 0xF) + 1)
+        {
+        case 1: return tou8(reg);
+        case 2: return tou16(reg);
+        case 4: return tou32(reg);
+        case 8: return tou64(reg);
+        }
+        return 0;
+    }
+
+    inline f64 getfval(u8 reg)
+    {
+        switch((reg & 0xF) + 1)
+        {
+        case 4: return tof32(reg);
+        case 8: return tof64(reg);
+        }
+    }
+
+    void stdcheck_one(u8 reg, int ecinv);
+    void stdcheck_two(u8 reg1, u8 reg2, int ecinv, int eclap);
+    void stdcheck_two_nolap(u8 reg1, u8 reg2, int ecinv);
+
+    inline void clear_check(u8 reg)             { stdcheck_one(reg, ECINVCLEAR); }
+    inline void load_check(u8 reg, void* p_val) { stdcheck_one(reg, ECINVLOAD); }
+    inline void mov_check(u8 reg1, u8 reg2)     { stdcheck_two(reg1, reg2, ECINVMOV, ECLAPMOV); }
+    inline void swap_check(u8 reg1, u8 reg2)    { stdcheck_two(reg1, reg2, ECINVSWAP, ECLAPSWAP);}
+
+    inline void inc_check(u8 reg)               { stdcheck_one(reg, ECINVINC); }
+    inline void dec_check(u8 reg)               { stdcheck_one(reg, ECINVDEC); }
+    inline void neg_check(u8 reg)               { stdcheck_one(reg, ECINVNEG); }
+    inline void add_check(u8 reg1, u8 reg2)     { stdcheck_two_nolap(reg1, reg1, ECINVADD); }
+    inline void sub_check(u8 reg1, u8 reg2)     { stdcheck_two_nolap(reg1, reg1, ECINVSUB); }
+    inline void mul_check(u8 reg1, u8 reg2)     { stdcheck_two_nolap(reg1, reg1, ECINVMUL); }
+    inline void div_check(u8 reg1, u8 reg2)     { stdcheck_two_nolap(reg1, reg1, ECINVDIV); }
+    inline void idiv_check(u8 reg1, u8 reg2)    { stdcheck_two_nolap(reg1, reg1, ECINVIDIV); }
+
+    void clear_noc(u8 reg);
+    void load_noc(u8 reg, void* p_val);
+    void mov_noc(u8 reg1, u8 reg2);
+    void swap_noc(u8 reg1, u8 reg2);
+
+    void inc_noc(u8 reg);
+    void dec_noc(u8 reg);
+    void neg_noc(u8 reg);
+    void add_noc(u8 reg1, u8 reg2);
+    void sub_noc(u8 reg1, u8 reg2);
+    void mul_noc(u8 reg1, u8 reg2);
+    void div_noc(u8 reg1, u8 reg2);
+    void idiv_noc(u8 reg1, u8 reg2);
 };
 
 #endif /* REG_H_ */

@@ -41,15 +41,19 @@ typedef double   f64;
 
 typedef u32      asize;
 
-#define AVMEXIT_INTERNLOGIC             0xFFCA0000
-#define AVMEXIT_EOF                     0xFFCA0001
-
-#define AVMEXIT_REGINVCLEAR             0xFFCB0000
-#define AVMEXIT_REGINVLOAD              0xFFCB0001
-#define AVMEXIT_REGINVMOV               0xFFCB0002
-#define AVMEXIT_REGLAPMOV               0xFFCB0003
-#define AVMEXIT_REGINVSWAP              0xFFCB0004
-#define AVMEXIT_REGLAPSWAP              0xFFCB0005
-
+#define ECINVCLEAR             0xFFCB0000
+#define ECINVLOAD              0xFFCB0001
+#define ECINVMOV               0xFFCB0002
+#define ECLAPMOV               0xFFCB0003
+#define ECINVSWAP              0xFFCB0004
+#define ECLAPSWAP              0xFFCB0005
+#define ECINVINC               0xFFCB0006
+#define ECINVDEC               0xFFCB0007
+#define ECINVNEG               0xFFCB0008
+#define ECINVADD               0xFFCB0009
+#define ECINVSUB               0xFFCB000A
+#define ECINVMUL               0xFFCB000B
+#define ECINVDIV               0xFFCB000C
+#define ECINVIDIV              0xFFCB000D
 
 #endif /* ATYPE_H_ */
