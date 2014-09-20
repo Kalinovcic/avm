@@ -45,6 +45,17 @@ bool Register::valid(u8 reg)
         && (size != 16);
 }
 
+bool Register::valid_float(u8 reg)
+{
+    u8 pos = reg >> 4;
+    u8 size = (reg & 0xF) + 1;
+    return (pos + size - 1 < 16)
+        && !(pos % size)
+        && !((size & (size - 1)))
+        && (size != 16)
+        && (size >= 4);
+}
+
 bool Register::overlap(u8 reg1, u8 reg2)
 {
     u8 pos1 = reg1 >> 4;
@@ -75,26 +86,6 @@ void Register::tobuff(u8 reg)
 {
     memset(m_buff, 0, 16);
     memcpy(m_buff, m_bytes + (reg >> 4), (reg & 0xF) + 1);
-}
-
-/******************************************************/
-
-void Register::stdcheck_one(u8 reg, int ecinv)
-{
-    if(!valid(reg)) exit(ecinv);
-}
-
-void Register::stdcheck_two(u8 reg1, u8 reg2, int ecinv, int eclap)
-{
-    if(!valid(reg1)) exit(ecinv);
-    if(!valid(reg2)) exit(ecinv);
-    if(overlap(reg1, reg2)) exit(eclap);
-}
-
-void Register::stdcheck_two_nolap(u8 reg1, u8 reg2, int ecinv)
-{
-    if(!valid(reg1)) exit(ecinv);
-    if(!valid(reg2)) exit(ecinv);
 }
 
 /******************************************************/

@@ -98,6 +98,7 @@ private:
     u8 m_buff[16];
 
     bool valid(u8 reg);
+    bool valid_float(u8 reg);
     bool overlap(u8 reg1, u8 reg2);
 
     void loadreg(u8 reg, u8 srcsize, void* src);
@@ -132,23 +133,61 @@ private:
         }
     }
 
-    void stdcheck_one(u8 reg, int ecinv);
-    void stdcheck_two(u8 reg1, u8 reg2, int ecinv, int eclap);
-    void stdcheck_two_nolap(u8 reg1, u8 reg2, int ecinv);
+    inline void scheck1(u8 r, bool f, int ec)
+    {
+        if(f) { if(!valid_float(r)) exit(ec); }
+        else    if(!valid(r)) exit(ec);
+    }
 
-    inline void clear_check(u8 reg)             { stdcheck_one(reg, ECINVCLEAR); }
-    inline void load_check(u8 reg, void* p_val) { stdcheck_one(reg, ECINVLOAD); }
-    inline void mov_check(u8 reg1, u8 reg2)     { stdcheck_two(reg1, reg2, ECINVMOV, ECLAPMOV); }
-    inline void swap_check(u8 reg1, u8 reg2)    { stdcheck_two(reg1, reg2, ECINVSWAP, ECLAPSWAP);}
+    inline void scheck2nl(u8 r1, bool f1, u8 r2, bool f2, int ec)
+    {
+        scheck1(r1, f1, ec);
+        scheck1(r2, f2, ec);
+    }
 
-    inline void inc_check(u8 reg)               { stdcheck_one(reg, ECINVINC); }
-    inline void dec_check(u8 reg)               { stdcheck_one(reg, ECINVDEC); }
-    inline void neg_check(u8 reg)               { stdcheck_one(reg, ECINVNEG); }
-    inline void add_check(u8 reg1, u8 reg2)     { stdcheck_two_nolap(reg1, reg1, ECINVADD); }
-    inline void sub_check(u8 reg1, u8 reg2)     { stdcheck_two_nolap(reg1, reg1, ECINVSUB); }
-    inline void mul_check(u8 reg1, u8 reg2)     { stdcheck_two_nolap(reg1, reg1, ECINVMUL); }
-    inline void div_check(u8 reg1, u8 reg2)     { stdcheck_two_nolap(reg1, reg1, ECINVDIV); }
-    inline void idiv_check(u8 reg1, u8 reg2)    { stdcheck_two_nolap(reg1, reg1, ECINVIDIV); }
+    inline void scheck2(u8 r1, bool f1, u8 r2, bool f2, int ecinv, int eclap)
+    {
+        scheck2nl(r1, f1, r2, f2, ecinv);
+        if(overlap(r1, r2)) exit(eclap);
+    }
+
+    inline void intc1(u8 r, int ec)                     { scheck1(r, 0, ec); }
+    inline void floatc1(u8 r, int ec)                   { scheck1(r, 1, ec); }
+    inline void intc2(u8 r1, u8 r2, int ec1, int ec2)   { scheck2(r1, 0, r2, 0, ec1, ec2); }
+    inline void intc2nl(u8 r1, u8 r2, int ec1)          { scheck2nl(r1, 0, r2, 0, ec1); }
+    inline void floatc2(u8 r1, u8 r2, int ec1, int ec2) { scheck2(r1, 1, r2, 1, ec1, ec2); }
+    inline void floatc2nl(u8 r1, u8 r2, int ec1)        { scheck2nl(r1, 1, r2, 1, ec1); }
+
+    inline void clear_check(u8 reg)             { intc1(reg, ECINVCLEAR); }
+    inline void load_check(u8 reg, void* p_val) { intc1(reg, ECINVLOAD); }
+    inline void mov_check(u8 reg1, u8 reg2)     { intc2(reg1, reg2, ECINVMOV, ECLAPMOV); }
+    inline void swap_check(u8 reg1, u8 reg2)    { intc2(reg1, reg2, ECINVSWAP, ECLAPSWAP);}
+
+    inline void inc_check(u8 reg)               { intc1(reg, ECINVINC); }
+    inline void dec_check(u8 reg)               { intc1(reg, ECINVDEC); }
+    inline void neg_check(u8 reg)               { intc1(reg, ECINVNEG); }
+    inline void add_check(u8 reg1, u8 reg2)     { intc2nl(reg1, reg1, ECINVADD); }
+    inline void sub_check(u8 reg1, u8 reg2)     { intc2nl(reg1, reg1, ECINVSUB); }
+    inline void mul_check(u8 reg1, u8 reg2)     { intc2nl(reg1, reg1, ECINVMUL); }
+    inline void div_check(u8 reg1, u8 reg2)     { intc2nl(reg1, reg1, ECINVDIV); }
+    inline void idiv_check(u8 reg1, u8 reg2)    { intc2nl(reg1, reg1, ECINVIDIV); }
+    inline void fadd_check(u8 reg1, u8 reg2)    { scheck2nl(reg1, 1, reg2, 1, ECINVFADD); }
+    inline void fiadd_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFIADD); }
+    inline void fuadd_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFUADD); }
+    inline void fsub_check(u8 reg1, u8 reg2)    { scheck2nl(reg1, 1, reg2, 1, ECINVFSUB); }
+    inline void fisub_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFISUB); }
+    inline void fisubr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 1, ECINVFISUBR); }
+    inline void fusub_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFUSUB); }
+    inline void fusubr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 1, ECINVFUSUBR); }
+    inline void fmul_check(u8 reg1, u8 reg2)    { scheck2nl(reg1, 1, reg2, 1, ECINVFMUL); }
+    inline void fimul_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFIMUL); }
+    inline void fumul_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFUMUL); }
+    inline void fdiv_check(u8 reg1, u8 reg2)    { scheck2nl(reg1, 1, reg2, 1, ECINVFDIV); }
+    inline void fidiv_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFIDIV); }
+    inline void fidivr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 1, ECINVFIDIVR); }
+    inline void fudiv_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFUDIV); }
+    inline void fudivr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 1, ECINVFUDIVR); }
+    inline void fneg_check(u8 reg1, u8 reg2)    { floatc1(reg1, ECINVFNEG); }
 
     void clear_noc(u8 reg);
     void load_noc(u8 reg, void* p_val);

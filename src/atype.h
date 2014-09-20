@@ -55,5 +55,22 @@ typedef u32      asize;
 #define ECINVMUL               0xFFCB000B
 #define ECINVDIV               0xFFCB000C
 #define ECINVIDIV              0xFFCB000D
+#define ECINVFADD              0xFFCB000E
+#define ECINVFIADD             0xFFCB000F
+#define ECINVFUADD             0xFFCB0010
+#define ECINVFSUB              0xFFCB0011
+#define ECINVFISUB             0xFFCB0012
+#define ECINVFISUBR            0xFFCB0013
+#define ECINVFUSUB             0xFFCB0014
+#define ECINVFUSUBR            0xFFCB0015
+#define ECINVFMUL              0xFFCB0016
+#define ECINVFIMUL             0xFFCB0017
+#define ECINVFUMUL             0xFFCB0018
+#define ECINVFDIV              0xFFCB0019
+#define ECINVFIDIV             0xFFCB001A
+#define ECINVFIDIVR            0xFFCB001B
+#define ECINVFUDIV             0xFFCB001C
+#define ECINVFUDIVR            0xFFCB001D
+#define ECINVFNEG              0xFFCB001E
 
 #endif /* ATYPE_H_ */
