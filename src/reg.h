@@ -15,35 +15,35 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * File: atype.h
+ * File: reg.h
  * Description: 
  * Author: Lovro Kalinovcic
  * 
  */
 
-#ifndef ATYPE_H_
-#define ATYPE_H_
+#ifndef REG_H_
+#define REG_H_
 
-#include <stdint.h>
+#include "atype.h"
 
-typedef int8_t   i8;
-typedef int16_t  i16;
-typedef int32_t  i32;
-typedef int64_t  i64;
+#include <stdlib.h>
+#include <string.h>
 
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
+#define REGISTER 0x
 
-typedef float    f32;
-typedef double   f64;
+class Register
+{
+public:
+    Register();
+    ~Register();
 
-typedef u32      asize;
+    inline void load(u8 reg, void* p_val);
+    inline void mov(u8 reg1, u8 reg2);
+private:
+    u8 m_bytes[16];
 
-#define AVMEXIT_INTERNLOGIC             0xFFCA0000
-#define AVMEXIT_EOF                     0xFFCA0001
+    inline bool valid(u8 reg) { return (reg & 0xF) + (reg >> 4) < 16; }
+    inline bool overlap(u8 reg1, u8 reg2);
+};
 
-#define AVMEXIT_REGLOAD                 0xFFCB0000
-
-#endif /* ATYPE_H_ */
+#endif /* REG_H_ */

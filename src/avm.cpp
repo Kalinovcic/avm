@@ -26,16 +26,10 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include "log.h"
 #include "bcode.h"
 
 int main(int argc, char** argv)
 {
-    Log* log = new Log();
-    log->setStream(&std::cout, Log::INFO);
-    log->setStream(&std::cout, Log::WARNING);
-    log->setStream(&std::cerr, Log::ERROR);
-
     FILE* file = fopen("../aspelc/test.aby", "r");
     fseek(file, 0, SEEK_END);
     u32 filesize = ftell(file);
@@ -45,7 +39,7 @@ int main(int argc, char** argv)
     fread(bcraw, 1, filesize, file);
     fclose(file);
 
-    Bytecode* bytecode = new Bytecode(log, bcraw, bcraw + filesize);
+    Bytecode* bytecode = new Bytecode(bcraw, bcraw + filesize);
 
     char* str = (char*) bytecode->nextString();
     u32 num = bytecode->next16();
@@ -56,7 +50,6 @@ int main(int argc, char** argv)
 
     delete bytecode;
     delete[] bcraw;
-    delete log;
 
     return EXIT_SUCCESS;
 }

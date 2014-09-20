@@ -29,16 +29,14 @@
 #include <cstring>
 
 #include "atype.h"
-#include "log.h"
 
 class Bytecode
 {
 public:
-    Bytecode(Log* log, u8* begin, u8* end)
-    : m_log(log), m_begin(begin), m_current(begin), m_end(end)
+    Bytecode(u8* begin, u8* end)
+    : m_begin(begin), m_current(begin), m_end(end)
     {
-        if(begin > end)
-            log->abort("invalid bytecode pointers [start greater than end]");
+        if(begin > end) exit(AVMEXIT_INTERNLOGIC);
     }
 
     ~Bytecode() {}
@@ -49,7 +47,7 @@ public:
     inline void next(void* ptr, asize size)
     {
         if(m_current + size > m_end)
-            m_log->abort("unexpected EOF");
+            exit(AVMEXIT_EOF);
         memcpy(ptr, m_current, size);
         m_current += size;
     }
@@ -66,8 +64,6 @@ public:
         return strptr;
     }
 private:
-    Log* m_log;
-
     u8* m_begin;
     u8* m_current;
     u8* m_end;

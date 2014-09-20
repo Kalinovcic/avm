@@ -15,35 +15,31 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * File: atype.h
+ * File: reg.cpp
  * Description: 
  * Author: Lovro Kalinovcic
  * 
  */
 
-#ifndef ATYPE_H_
-#define ATYPE_H_
+#include "reg.h"
 
-#include <stdint.h>
+Register::Register()
+{
 
-typedef int8_t   i8;
-typedef int16_t  i16;
-typedef int32_t  i32;
-typedef int64_t  i64;
+}
 
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
+Register::~Register()
+{
 
-typedef float    f32;
-typedef double   f64;
+}
 
-typedef u32      asize;
+void Register::load(u8 reg, void* p_val)
+{
+    if(!valid(reg)) exit(AVMEXIT_REGLOAD);
+    memcpy(m_bytes + (reg >> 4), p_val, (reg & 0xF) + 1);
+}
 
-#define AVMEXIT_INTERNLOGIC             0xFFCA0000
-#define AVMEXIT_EOF                     0xFFCA0001
+void Register::mov(u8 reg1, u8 reg2)
+{
 
-#define AVMEXIT_REGLOAD                 0xFFCB0000
-
-#endif /* ATYPE_H_ */
+}
