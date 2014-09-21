@@ -32,13 +32,21 @@
 int main(int argc, char** argv)
 {
     Register reg;
+    reg.debug3();
     reg.util_load32f(REGISTER_EAB, 51.23f);
 
-    reg.debug2(REGISTER_EAB);
-    reg.cfi(REGISTER_EAB);
-    reg.debug(REGISTER_EAB);
-    reg.cif(REGISTER_EAB);
-    reg.debug2(REGISTER_EAB);
+    reg.debug3();
+    reg.mov(REGISTER_EAB, REGISTER_ECD);
+    reg.debug3();
+
+    reg.cfi(REGISTER_ECD);
+    reg.debug3();
+    reg.util_load32(REGISTER_EL, reg.ficmp(REGISTER_EAB, REGISTER_ECD));
+    reg.debug3();
+    reg.debug(REGISTER_EEF);
+    reg.debug3();
+    reg.util_load16(REGISTER_HX, 32);
+    reg.debug3();
 
     return EXIT_SUCCESS;
 }

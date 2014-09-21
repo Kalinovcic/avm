@@ -25,7 +25,7 @@
 
 Register::Register()
 {
-
+    memset(m_bytes, 0, 16);
 }
 
 Register::~Register()
@@ -481,5 +481,88 @@ void Register::cif_noc(u8 reg)
     case 4: tofloat32((i32*) (m_bytes + (reg >> 4))); break;
     case 8: tofloat64((i64*) (m_bytes + (reg >> 4))); break;
     }
+}
+
+u8 Register::cmp_noc(u8 reg1, u8 reg2)
+{
+    u64 val1 = getval(reg1);
+    u64 val2 = getval(reg2);
+    if(val1 < val2) return -1;
+    if(val1 > val2) return 1;
+    return 0;
+}
+
+u8 Register::icmp_noc(u8 reg1, u8 reg2)
+{
+    i64 val1 = getval(reg1);
+    i64 val2 = getval(reg2);
+    if(val1 < val2) return -1;
+    if(val1 > val2) return 1;
+    return 0;
+}
+
+u8 Register::iucmp_noc(u8 reg1, u8 reg2)
+{
+    i64 val1 = getval(reg1);
+    u64 val2 = getval(reg2);
+    if(val1 < 0) return -1;
+    if((u64) val1 < val2) return -1;
+    if((u64) val1 > val2) return 1;
+    return 0;
+}
+
+u8 Register::iucmpr_noc(u8 reg1, u8 reg2)
+{
+    u64 val1 = getval(reg1);
+    i64 val2 = getval(reg2);
+    if(val2 < 0) return 1;
+    if(val1 < (u64) val2) return -1;
+    if(val1 > (u64) val2) return 1;
+    return 0;
+}
+
+u8 Register::fcmp_noc(u8 reg1, u8 reg2)
+{
+    f64 val1 = getfval(reg1);
+    f64 val2 = getfval(reg2);
+    if(val1 < val2) return -1;
+    if(val1 > val2) return 1;
+    return 0;
+}
+
+u8 Register::ficmp_noc(u8 reg1, u8 reg2)
+{
+    f64 val1 = getfval(reg1);
+    i64 val2 = getval(reg2);
+    if(val1 < val2) return -1;
+    if(val1 > val2) return 1;
+    return 0;
+}
+
+u8 Register::ficmpr_noc(u8 reg1, u8 reg2)
+{
+    i64 val1 = getval(reg1);
+    f64 val2 = getfval(reg2);
+    if(val1 < val2) return -1;
+    if(val1 > val2) return 1;
+    return 0;
+}
+
+u8 Register::fucmp_noc(u8 reg1, u8 reg2)
+{
+    f64 val1 = getfval(reg1);
+    u64 val2 = getval(reg2);
+    if(val1 < val2) return -1;
+    if(val1 > val2) return 1;
+    return 0;
+}
+
+u8 Register::fucmpr_noc(u8 reg1, u8 reg2)
+{
+    u64 val1 = getval(reg1);
+    f64 val2 = getfval(reg2);
+    if(val1 < val2) return -1;
+    if(val1 > val2) return 1;
+    return 0;
 }
 

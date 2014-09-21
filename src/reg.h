@@ -30,22 +30,22 @@
 #include <cstdio>
 #include <cstring>
 
-#define REGISTER_AH     0x00
-#define REGISTER_AL     0x10
-#define REGISTER_BH     0x20
-#define REGISTER_BL     0x30
-#define REGISTER_CH     0x40
-#define REGISTER_CL     0x50
-#define REGISTER_DH     0x60
-#define REGISTER_DL     0x70
-#define REGISTER_EH     0x80
-#define REGISTER_EL     0x90
-#define REGISTER_FH     0xA0
-#define REGISTER_FL     0xB0
-#define REGISTER_GH     0xC0
-#define REGISTER_GL     0xD0
-#define REGISTER_HH     0xE0
-#define REGISTER_HL     0xF0
+#define REGISTER_AL     0x00
+#define REGISTER_AH     0x10
+#define REGISTER_BL     0x20
+#define REGISTER_BH     0x30
+#define REGISTER_CL     0x40
+#define REGISTER_CH     0x50
+#define REGISTER_DL     0x60
+#define REGISTER_DH     0x70
+#define REGISTER_EL     0x80
+#define REGISTER_EH     0x90
+#define REGISTER_FL     0xA0
+#define REGISTER_FH     0xB0
+#define REGISTER_GL     0xC0
+#define REGISTER_GH     0xD0
+#define REGISTER_HL     0xE0
+#define REGISTER_HH     0xF0
 
 #define REGISTER_AX     0x01
 #define REGISTER_BX     0x21
@@ -70,44 +70,53 @@ public:
     Register();
     ~Register();
 
-    inline void clear(u8 reg)               { clear_check(reg);         clear_noc(reg);         }
-    inline void load(u8 reg, void* p_val)   { load_check(reg, p_val);   load_noc(reg, p_val);   }
-    inline void mov(u8 reg1, u8 reg2)       { mov_check(reg1, reg2);    mov_noc(reg1, reg2);    }
-    inline void swap(u8 reg1, u8 reg2)      { swap_check(reg1, reg2);   swap_noc(reg1, reg2);   }
-    inline void rot(u8 reg1, u8 reg2)       { rot_check(reg1, reg2);    rot_noc(reg1, reg2);    }
-    inline void shtl(u8 reg1, u8 reg2)      { shtl_check(reg1, reg2);   shtl_noc(reg1, reg2);   }
-    inline void shtr(u8 reg1, u8 reg2)      { shtr_check(reg1, reg2);   shtr_noc(reg1, reg2);   }
-    inline void band(u8 reg1, u8 reg2)      { band_check(reg1, reg2);   band_noc(reg1, reg2);   }
-    inline void bor(u8 reg1, u8 reg2)       { bor_check(reg1, reg2);    bor_noc(reg1, reg2);    }
-    inline void bxor(u8 reg1, u8 reg2)      { bxor_check(reg1, reg2);   bxor_noc(reg1, reg2);   }
-    inline void bnot(u8 reg)                { bnot_check(reg);          bnot_noc(reg);          }
-    inline void inc(u8 reg)                 { inc_check(reg);           inc_noc(reg);           }
-    inline void dec(u8 reg)                 { dec_check(reg);           dec_noc(reg);           }
-    inline void neg(u8 reg)                 { neg_check(reg);           neg_noc(reg);           }
-    inline void add(u8 reg1, u8 reg2)       { add_check(reg1, reg2);    add_noc(reg1, reg2);    }
-    inline void sub(u8 reg1, u8 reg2)       { sub_check(reg1, reg2);    sub_noc(reg1, reg2);    }
-    inline void mul(u8 reg1, u8 reg2)       { mul_check(reg1, reg2);    mul_noc(reg1, reg2);    }
-    inline void div(u8 reg1, u8 reg2)       { div_check(reg1, reg2);    div_noc(reg1, reg2);    }
-    inline void idiv(u8 reg1, u8 reg2)      { idiv_check(reg1, reg2);   idiv_noc(reg1, reg2);   }
-    inline void fadd(u8 reg1, u8 reg2)      { fadd_check(reg1, reg2);   fadd_noc(reg1, reg2);   }
-    inline void fiadd(u8 reg1, u8 reg2)     { fiadd_check(reg1, reg2);  fiadd_noc(reg1, reg2);  }
-    inline void fuadd(u8 reg1, u8 reg2)     { fuadd_check(reg1, reg2);  fuadd_noc(reg1, reg2);  }
-    inline void fsub(u8 reg1, u8 reg2)      { fsub_check(reg1, reg2);   fsub_noc(reg1, reg2);   }
-    inline void fisub(u8 reg1, u8 reg2)     { fisub_check(reg1, reg2);  fisub_noc(reg1, reg2);  }
-    inline void fisubr(u8 reg1, u8 reg2)    { fisubr_check(reg1, reg2); fisubr_noc(reg1, reg2); }
-    inline void fusub(u8 reg1, u8 reg2)     { fusub_check(reg1, reg2);  fusub_noc(reg1, reg2);  }
-    inline void fusubr(u8 reg1, u8 reg2)    { fusubr_check(reg1, reg2); fusubr_noc(reg1, reg2); }
-    inline void fmul(u8 reg1, u8 reg2)      { fmul_check(reg1, reg2);   fmul_noc(reg1, reg2);   }
-    inline void fimul(u8 reg1, u8 reg2)     { fimul_check(reg1, reg2);  fimul_noc(reg1, reg2);  }
-    inline void fumul(u8 reg1, u8 reg2)     { fumul_check(reg1, reg2);  fumul_noc(reg1, reg2);  }
-    inline void fdiv(u8 reg1, u8 reg2)      { fdiv_check(reg1, reg2);   fdiv_noc(reg1, reg2);   }
-    inline void fidiv(u8 reg1, u8 reg2)     { fidiv_check(reg1, reg2);  fidiv_noc(reg1, reg2);  }
-    inline void fidivr(u8 reg1, u8 reg2)    { fidivr_check(reg1, reg2); fidivr_noc(reg1, reg2); }
-    inline void fudiv(u8 reg1, u8 reg2)     { fudiv_check(reg1, reg2);  fudiv_noc(reg1, reg2);  }
-    inline void fudivr(u8 reg1, u8 reg2)    { fudivr_check(reg1, reg2); fudivr_noc(reg1, reg2); }
-    inline void fneg(u8 reg)                { fneg_check(reg);          fneg_noc(reg);          }
-    inline void cfi(u8 reg)                 { cfi_check(reg);           cfi_noc(reg);           }
-    inline void cif(u8 reg)                 { cif_check(reg);           cif_noc(reg);           }
+    inline void clear(u8 reg)            { clear_check(reg);                clear_noc(reg);         }
+    inline void load(u8 reg, void* val)  { load_check(reg, val);            load_noc(reg, val);     }
+    inline void mov(u8 reg1, u8 reg2)    { mov_check(reg1, reg2);           mov_noc(reg1, reg2);    }
+    inline void swap(u8 reg1, u8 reg2)   { swap_check(reg1, reg2);          swap_noc(reg1, reg2);   }
+    inline void rot(u8 reg1, u8 reg2)    { rot_check(reg1, reg2);           rot_noc(reg1, reg2);    }
+    inline void shtl(u8 reg1, u8 reg2)   { shtl_check(reg1, reg2);          shtl_noc(reg1, reg2);   }
+    inline void shtr(u8 reg1, u8 reg2)   { shtr_check(reg1, reg2);          shtr_noc(reg1, reg2);   }
+    inline void band(u8 reg1, u8 reg2)   { band_check(reg1, reg2);          band_noc(reg1, reg2);   }
+    inline void bor(u8 reg1, u8 reg2)    { bor_check(reg1, reg2);           bor_noc(reg1, reg2);    }
+    inline void bxor(u8 reg1, u8 reg2)   { bxor_check(reg1, reg2);          bxor_noc(reg1, reg2);   }
+    inline void bnot(u8 reg)             { bnot_check(reg);                 bnot_noc(reg);          }
+    inline void inc(u8 reg)              { inc_check(reg);                  inc_noc(reg);           }
+    inline void dec(u8 reg)              { dec_check(reg);                  dec_noc(reg);           }
+    inline void neg(u8 reg)              { neg_check(reg);                  neg_noc(reg);           }
+    inline void add(u8 reg1, u8 reg2)    { add_check(reg1, reg2);           add_noc(reg1, reg2);    }
+    inline void sub(u8 reg1, u8 reg2)    { sub_check(reg1, reg2);           sub_noc(reg1, reg2);    }
+    inline void mul(u8 reg1, u8 reg2)    { mul_check(reg1, reg2);           mul_noc(reg1, reg2);    }
+    inline void div(u8 reg1, u8 reg2)    { div_check(reg1, reg2);           div_noc(reg1, reg2);    }
+    inline void idiv(u8 reg1, u8 reg2)   { idiv_check(reg1, reg2);          idiv_noc(reg1, reg2);   }
+    inline void fadd(u8 reg1, u8 reg2)   { fadd_check(reg1, reg2);          fadd_noc(reg1, reg2);   }
+    inline void fiadd(u8 reg1, u8 reg2)  { fiadd_check(reg1, reg2);         fiadd_noc(reg1, reg2);  }
+    inline void fuadd(u8 reg1, u8 reg2)  { fuadd_check(reg1, reg2);         fuadd_noc(reg1, reg2);  }
+    inline void fsub(u8 reg1, u8 reg2)   { fsub_check(reg1, reg2);          fsub_noc(reg1, reg2);   }
+    inline void fisub(u8 reg1, u8 reg2)  { fisub_check(reg1, reg2);         fisub_noc(reg1, reg2);  }
+    inline void fisubr(u8 reg1, u8 reg2) { fisubr_check(reg1, reg2);        fisubr_noc(reg1, reg2); }
+    inline void fusub(u8 reg1, u8 reg2)  { fusub_check(reg1, reg2);         fusub_noc(reg1, reg2);  }
+    inline void fusubr(u8 reg1, u8 reg2) { fusubr_check(reg1, reg2);        fusubr_noc(reg1, reg2); }
+    inline void fmul(u8 reg1, u8 reg2)   { fmul_check(reg1, reg2);          fmul_noc(reg1, reg2);   }
+    inline void fimul(u8 reg1, u8 reg2)  { fimul_check(reg1, reg2);         fimul_noc(reg1, reg2);  }
+    inline void fumul(u8 reg1, u8 reg2)  { fumul_check(reg1, reg2);         fumul_noc(reg1, reg2);  }
+    inline void fdiv(u8 reg1, u8 reg2)   { fdiv_check(reg1, reg2);          fdiv_noc(reg1, reg2);   }
+    inline void fidiv(u8 reg1, u8 reg2)  { fidiv_check(reg1, reg2);         fidiv_noc(reg1, reg2);  }
+    inline void fidivr(u8 reg1, u8 reg2) { fidivr_check(reg1, reg2);        fidivr_noc(reg1, reg2); }
+    inline void fudiv(u8 reg1, u8 reg2)  { fudiv_check(reg1, reg2);         fudiv_noc(reg1, reg2);  }
+    inline void fudivr(u8 reg1, u8 reg2) { fudivr_check(reg1, reg2);        fudivr_noc(reg1, reg2); }
+    inline void fneg(u8 reg)             { fneg_check(reg);                 fneg_noc(reg);          }
+    inline void cfi(u8 reg)              { cfi_check(reg);                  cfi_noc(reg);           }
+    inline void cif(u8 reg)              { cif_check(reg);                  cif_noc(reg);           }
+    inline u8   cmp(u8 reg1, u8 reg2)    { cmp_check(reg1, reg2);    return cmp_noc(reg1, reg2);    }
+    inline u8   icmp(u8 reg1, u8 reg2)   { icmp_check(reg1, reg2);   return icmp_noc(reg1, reg2);   }
+    inline u8   iucmp(u8 reg1, u8 reg2)  { iucmp_check(reg1, reg2);  return iucmp_noc(reg1, reg2);  }
+    inline u8   iucmpr(u8 reg1, u8 reg2) { iucmpr_check(reg1, reg2); return iucmpr_noc(reg1, reg2); }
+    inline u8   fcmp(u8 reg1, u8 reg2)   { fcmp_check(reg1, reg2);   return fcmp_noc(reg1, reg2);   }
+    inline u8   ficmp(u8 reg1, u8 reg2)  { ficmp_check(reg1, reg2);  return ficmp_noc(reg1, reg2);  }
+    inline u8   ficmpr(u8 reg1, u8 reg2) { ficmpr_check(reg1, reg2); return ficmpr_noc(reg1, reg2); }
+    inline u8   fucmp(u8 reg1, u8 reg2)  { fucmp_check(reg1, reg2);  return fucmp_noc(reg1, reg2);  }
+    inline u8   fucmpr(u8 reg1, u8 reg2) { fucmpr_check(reg1, reg2); return fucmpr_noc(reg1, reg2); }
 
     inline void util_load8(u8 reg, u8 val)    { load_check(reg, &val); loadreg(reg, 1, &val); }
     inline void util_load16(u8 reg, u16 val)  { load_check(reg, &val); loadreg(reg, 2, &val); }
@@ -118,6 +127,17 @@ public:
 
     inline void debug(u8 reg) { printf("%d\n", *((i32*) (m_bytes + (reg >> 4)))); }
     inline void debug2(u8 reg) { printf("%f\n", *((f32*) (m_bytes + (reg >> 4)))); }
+
+    inline void debug3()
+    {
+        for(int i = 0; i < 16; i += 4)
+        {
+            for(int j = 0; j < 4; j++)
+                printf("%02x", *((u8*) (m_bytes + i + j)));
+            printf(" ");
+        }
+        printf("\n");
+    }
 private:
     u8 m_bytes[16];
     u8 m_buff[16];
@@ -243,6 +263,15 @@ private:
     inline void fneg_check(u8 reg)              { floatc1(reg, ECINVFNEG); }
     inline void cfi_check(u8 reg)               { floatc1(reg, ECINVCFI); }
     inline void cif_check(u8 reg)               { floatc1(reg, ECINVCIF); }
+    inline void cmp_check(u8 reg1, u8 reg2)     { scheck2nl(reg1, 0, reg2, 0, ECINVCMP); }
+    inline void icmp_check(u8 reg1, u8 reg2)    { scheck2nl(reg1, 0, reg2, 0, ECINVICMP); }
+    inline void iucmp_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 0, reg2, 0, ECINVIUCMP); }
+    inline void iucmpr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 0, ECINVIUCMPR); }
+    inline void fcmp_check(u8 reg1, u8 reg2)    { scheck2nl(reg1, 1, reg2, 1, ECINVFCMP); }
+    inline void ficmp_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFICMP); }
+    inline void ficmpr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 1, ECINVFICMPR); }
+    inline void fucmp_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFUCMP); }
+    inline void fucmpr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 1, ECINVFUCMPR); }
 
     void clear_noc(u8 reg);
     void load_noc(u8 reg, void* p_val);
@@ -282,6 +311,15 @@ private:
     void fneg_noc(u8 reg);
     void cfi_noc(u8 reg);
     void cif_noc(u8 reg);
+    u8   cmp_noc(u8 reg1, u8 reg2);
+    u8   icmp_noc(u8 reg1, u8 reg2);
+    u8   iucmp_noc(u8 reg1, u8 reg2);
+    u8   iucmpr_noc(u8 reg1, u8 reg2);
+    u8   fcmp_noc(u8 reg1, u8 reg2);
+    u8   ficmp_noc(u8 reg1, u8 reg2);
+    u8   ficmpr_noc(u8 reg1, u8 reg2);
+    u8   fucmp_noc(u8 reg1, u8 reg2);
+    u8   fucmpr_noc(u8 reg1, u8 reg2);
 };
 
 #endif /* REG_H_ */

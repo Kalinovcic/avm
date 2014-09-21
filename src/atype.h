@@ -81,5 +81,14 @@ typedef u32      asize;
 #define ECINVBNOT              0xFFCB0025
 #define ECINVCFI               0xFFCB0026
 #define ECINVCIF               0xFFCB0027
+#define ECINVCMP               0xFFCB0028
+#define ECINVICMP              0xFFCB0029
+#define ECINVIUCMP             0xFFCB002A
+#define ECINVIUCMPR            0xFFCB002B
+#define ECINVFCMP              0xFFCB002C
+#define ECINVFICMP             0xFFCB002D
+#define ECINVFICMPR            0xFFCB002E
+#define ECINVFUCMP             0xFFCB002F
+#define ECINVFUCMPR            0xFFCB0030
 
 #endif /* ATYPE_H_ */
