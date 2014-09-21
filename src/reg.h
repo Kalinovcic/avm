@@ -98,7 +98,7 @@ public:
     inline void fidivr(u8 reg1, u8 reg2)    { fidivr_check(reg1, reg2); fidivr_noc(reg1, reg2); }
     inline void fudiv(u8 reg1, u8 reg2)     { fudiv_check(reg1, reg2);  fudiv_noc(reg1, reg2);  }
     inline void fudivr(u8 reg1, u8 reg2)    { fudivr_check(reg1, reg2); fudivr_noc(reg1, reg2); }
-    inline void fneg(u8 reg1, u8 reg2)      { fneg_check(reg1, reg2);   fneg_noc(reg1, reg2);   }
+    inline void fneg(u8 reg)                { fneg_check(reg);          fneg_noc(reg);          }
 
     inline void util_load8(u8 reg, u8 val)    { load_check(reg, &val); loadreg(reg, 1, &val); }
     inline void util_load16(u8 reg, u16 val)  { load_check(reg, &val); loadreg(reg, 2, &val); }
@@ -215,7 +215,7 @@ private:
     inline void fidivr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 1, ECINVFIDIVR); }
     inline void fudiv_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFUDIV); }
     inline void fudivr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 1, ECINVFUDIVR); }
-    inline void fneg_check(u8 reg1, u8 reg2)    { floatc1(reg1, ECINVFNEG); }
+    inline void fneg_check(u8 reg)              { floatc1(reg, ECINVFNEG); }
 
     void clear_noc(u8 reg);
     void load_noc(u8 reg, void* p_val);
@@ -246,7 +246,7 @@ private:
     void fidivr_noc(u8 reg1, u8 reg2);
     void fudiv_noc(u8 reg1, u8 reg2);
     void fudivr_noc(u8 reg1, u8 reg2);
-    void fneg_noc(u8 reg1, u8 reg2);
+    void fneg_noc(u8 reg);
 };
 
 #endif /* REG_H_ */

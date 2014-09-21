@@ -36,6 +36,8 @@ int main(int argc, char** argv)
     reg.util_load32(REGISTER_ECD, -3);
 
     reg.fisub(REGISTER_EAB, REGISTER_ECD);
+    reg.fneg(REGISTER_EAB);
+    reg.neg(REGISTER_ECD);
 
     reg.debug2(REGISTER_EAB);
     reg.debug(REGISTER_ECD);

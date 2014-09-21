@@ -373,3 +373,12 @@ void Register::fudivr_noc(u8 reg1, u8 reg2)
     }
 }
 
+void Register::fneg_noc(u8 reg)
+{
+    switch((reg & 0xF) + 1)
+    {
+    case 4: (*((u32*) (m_bytes + (reg >> 4)))) ^= 1 << 31; break;
+    case 8: (*((u64*) (m_bytes + (reg >> 4)))) ^= 1L << 63; break;
+    }
+}
+
