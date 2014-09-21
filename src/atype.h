@@ -72,5 +72,12 @@ typedef u32      asize;
 #define ECINVFUDIV             0xFFCB001C
 #define ECINVFUDIVR            0xFFCB001D
 #define ECINVFNEG              0xFFCB001E
+#define ECINVROT               0xFFCB001F
+#define ECINVSHTL              0xFFCB0020
+#define ECINVSHTR              0xFFCB0021
+#define ECINVBAND              0xFFCB0022
+#define ECINVBOR               0xFFCB0023
+#define ECINVBXOR              0xFFCB0024
+#define ECINVBNOT              0xFFCB0025
 
 #endif /* ATYPE_H_ */

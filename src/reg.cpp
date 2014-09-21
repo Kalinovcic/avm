@@ -112,6 +112,89 @@ void Register::swap_noc(u8 reg1, u8 reg2)
     loadreg(reg2, 16, m_buff);
 }
 
+void Register::rot_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: rotateu8 ((u8 *) (m_bytes + (reg1 >> 4)), (u8) val); break;
+    case 2: rotateu16((u16*) (m_bytes + (reg1 >> 4)), (u8) val); break;
+    case 4: rotateu32((u32*) (m_bytes + (reg1 >> 4)), (u8) val); break;
+    case 8: rotateu64((u64*) (m_bytes + (reg1 >> 4)), (u8) val); break;
+    }
+}
+
+void Register::shtl_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) <<= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) <<= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) <<= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) <<= val; break;
+    }
+}
+
+void Register::shtr_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) >>= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) >>= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) >>= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) >>= val; break;
+    }
+}
+
+void Register::band_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) &= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) &= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) &= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) &= val; break;
+    }
+}
+
+void Register::bor_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) |= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) |= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) |= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) |= val; break;
+    }
+}
+
+void Register::bxor_noc(u8 reg1, u8 reg2)
+{
+    u64 val = getval(reg2);
+    switch((reg1 & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg1 >> 4)))) ^= val; break;
+    case 2: (*((u16*) (m_bytes + (reg1 >> 4)))) ^= val; break;
+    case 4: (*((u32*) (m_bytes + (reg1 >> 4)))) ^= val; break;
+    case 8: (*((u64*) (m_bytes + (reg1 >> 4)))) ^= val; break;
+    }
+}
+
+void Register::bnot_noc(u8 reg)
+{
+    switch((reg & 0xF) + 1)
+    {
+    case 1: (*((u8 *) (m_bytes + (reg >> 4)))) ^= -1; break;
+    case 2: (*((u16*) (m_bytes + (reg >> 4)))) ^= -1; break;
+    case 4: (*((u32*) (m_bytes + (reg >> 4)))) ^= -1; break;
+    case 8: (*((u64*) (m_bytes + (reg >> 4)))) ^= -1; break;
+    }
+}
+
 void Register::inc_noc(u8 reg)
 {
     switch((reg & 0xF) + 1)

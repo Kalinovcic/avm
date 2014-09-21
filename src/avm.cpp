@@ -32,14 +32,13 @@
 int main(int argc, char** argv)
 {
     Register reg;
-    reg.util_load32f(REGISTER_EAB, 15.4);
-    reg.util_load32(REGISTER_ECD, -3);
+    reg.util_load16(REGISTER_AX, 2);
+    reg.util_load16(REGISTER_CX, 15);
 
-    reg.fisub(REGISTER_EAB, REGISTER_ECD);
-    reg.fneg(REGISTER_EAB);
-    reg.neg(REGISTER_ECD);
+    reg.debug(REGISTER_AX);
+    reg.rot(REGISTER_AX, REGISTER_CX);
 
-    reg.debug2(REGISTER_EAB);
+    reg.debug(REGISTER_EAB);
     reg.debug(REGISTER_ECD);
 
     return EXIT_SUCCESS;

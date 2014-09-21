@@ -74,6 +74,13 @@ public:
     inline void load(u8 reg, void* p_val)   { load_check(reg, p_val);   load_noc(reg, p_val);   }
     inline void mov(u8 reg1, u8 reg2)       { mov_check(reg1, reg2);    mov_noc(reg1, reg2);    }
     inline void swap(u8 reg1, u8 reg2)      { swap_check(reg1, reg2);   swap_noc(reg1, reg2);   }
+    inline void rot(u8 reg1, u8 reg2)       { rot_check(reg1, reg2);    rot_noc(reg1, reg2);    }
+    inline void shtl(u8 reg1, u8 reg2)      { shtl_check(reg1, reg2);   shtl_noc(reg1, reg2);   }
+    inline void shtr(u8 reg1, u8 reg2)      { shtr_check(reg1, reg2);   shtr_noc(reg1, reg2);   }
+    inline void band(u8 reg1, u8 reg2)      { band_check(reg1, reg2);   band_noc(reg1, reg2);   }
+    inline void bor(u8 reg1, u8 reg2)       { bor_check(reg1, reg2);    bor_noc(reg1, reg2);    }
+    inline void bxor(u8 reg1, u8 reg2)      { bxor_check(reg1, reg2);   bxor_noc(reg1, reg2);   }
+    inline void bnot(u8 reg)                { bnot_check(reg);          bnot_noc(reg);          }
     inline void inc(u8 reg)                 { inc_check(reg);           inc_noc(reg);           }
     inline void dec(u8 reg)                 { dec_check(reg);           dec_noc(reg);           }
     inline void neg(u8 reg)                 { neg_check(reg);           neg_noc(reg);           }
@@ -119,6 +126,11 @@ private:
 
     void loadreg(u8 reg, u8 srcsize, void* src);
     void tobuff(u8 reg);
+
+    inline void rotateu8(u8* v, u8 am)   { am &= 7;  *v = (*v >> am) | (*v << (8  - am)); }
+    inline void rotateu16(u16* v, u8 am) { am &= 15; *v = (*v >> am) | (*v << (16 - am)); }
+    inline void rotateu32(u32* v, u8 am) { am &= 31; *v = (*v >> am) | (*v << (32 - am)); }
+    inline void rotateu64(u64* v, u8 am) { am &= 63; *v = (*v >> am) | (*v << (64 - am)); }
 
     inline u8 tou8(u8 reg)   { return *((u8 *) (m_bytes + (reg >> 4))); }
     inline u16 tou16(u8 reg) { return *((u16*) (m_bytes + (reg >> 4))); }
@@ -190,7 +202,13 @@ private:
     inline void load_check(u8 reg, void* p_val) { intc1(reg, ECINVLOAD); }
     inline void mov_check(u8 reg1, u8 reg2)     { intc2(reg1, reg2, ECINVMOV, ECLAPMOV); }
     inline void swap_check(u8 reg1, u8 reg2)    { intc2(reg1, reg2, ECINVSWAP, ECLAPSWAP);}
-
+    inline void rot_check(u8 reg1, u8 reg2)     { intc2nl(reg1, reg2, ECINVROT); }
+    inline void shtl_check(u8 reg1, u8 reg2)    { intc2nl(reg1, reg2, ECINVSHTL); }
+    inline void shtr_check(u8 reg1, u8 reg2)    { intc2nl(reg1, reg2, ECINVSHTR); }
+    inline void band_check(u8 reg1, u8 reg2)    { intc2nl(reg1, reg2, ECINVBAND); }
+    inline void bor_check(u8 reg1, u8 reg2)     { intc2nl(reg1, reg2, ECINVBOR); }
+    inline void bxor_check(u8 reg1, u8 reg2)    { intc2nl(reg1, reg2, ECINVBXOR); }
+    inline void bnot_check(u8 reg)              { intc1(reg, ECINVBNOT); }
     inline void inc_check(u8 reg)               { intc1(reg, ECINVINC); }
     inline void dec_check(u8 reg)               { intc1(reg, ECINVDEC); }
     inline void neg_check(u8 reg)               { intc1(reg, ECINVNEG); }
@@ -221,7 +239,13 @@ private:
     void load_noc(u8 reg, void* p_val);
     void mov_noc(u8 reg1, u8 reg2);
     void swap_noc(u8 reg1, u8 reg2);
-
+    void rot_noc(u8 reg1, u8 reg2);
+    void shtl_noc(u8 reg1, u8 reg2);
+    void shtr_noc(u8 reg1, u8 reg2);
+    void band_noc(u8 reg1, u8 reg2);
+    void bor_noc(u8 reg1, u8 reg2);
+    void bxor_noc(u8 reg1, u8 reg2);
+    void bnot_noc(u8 reg);
     void inc_noc(u8 reg);
     void dec_noc(u8 reg);
     void neg_noc(u8 reg);
