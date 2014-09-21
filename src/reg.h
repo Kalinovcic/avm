@@ -106,6 +106,8 @@ public:
     inline void fudiv(u8 reg1, u8 reg2)     { fudiv_check(reg1, reg2);  fudiv_noc(reg1, reg2);  }
     inline void fudivr(u8 reg1, u8 reg2)    { fudivr_check(reg1, reg2); fudivr_noc(reg1, reg2); }
     inline void fneg(u8 reg)                { fneg_check(reg);          fneg_noc(reg);          }
+    inline void cfi(u8 reg)                 { cfi_check(reg);           cfi_noc(reg);           }
+    inline void cif(u8 reg)                 { cif_check(reg);           cif_noc(reg);           }
 
     inline void util_load8(u8 reg, u8 val)    { load_check(reg, &val); loadreg(reg, 1, &val); }
     inline void util_load16(u8 reg, u16 val)  { load_check(reg, &val); loadreg(reg, 2, &val); }
@@ -131,6 +133,11 @@ private:
     inline void rotateu16(u16* v, u8 am) { am &= 15; *v = (*v >> am) | (*v << (16 - am)); }
     inline void rotateu32(u32* v, u8 am) { am &= 31; *v = (*v >> am) | (*v << (32 - am)); }
     inline void rotateu64(u64* v, u8 am) { am &= 63; *v = (*v >> am) | (*v << (64 - am)); }
+
+    inline void tofloat32(i32* v) { f32 fv = (f32) *v; *v = *((i32*) &fv); }
+    inline void tofloat64(i64* v) { f64 fv = (f64) *v; *v = *((i64*) &fv); }
+    inline void toint32(f32* v) { i32 iv = (i32) *v; *v = *((f32*) &iv); }
+    inline void toint64(f64* v) { i64 iv = (i64) *v; *v = *((f64*) &iv); }
 
     inline u8 tou8(u8 reg)   { return *((u8 *) (m_bytes + (reg >> 4))); }
     inline u16 tou16(u8 reg) { return *((u16*) (m_bytes + (reg >> 4))); }
@@ -234,6 +241,8 @@ private:
     inline void fudiv_check(u8 reg1, u8 reg2)   { scheck2nl(reg1, 1, reg2, 0, ECINVFUDIV); }
     inline void fudivr_check(u8 reg1, u8 reg2)  { scheck2nl(reg1, 0, reg2, 1, ECINVFUDIVR); }
     inline void fneg_check(u8 reg)              { floatc1(reg, ECINVFNEG); }
+    inline void cfi_check(u8 reg)               { floatc1(reg, ECINVCFI); }
+    inline void cif_check(u8 reg)               { floatc1(reg, ECINVCIF); }
 
     void clear_noc(u8 reg);
     void load_noc(u8 reg, void* p_val);
@@ -271,6 +280,8 @@ private:
     void fudiv_noc(u8 reg1, u8 reg2);
     void fudivr_noc(u8 reg1, u8 reg2);
     void fneg_noc(u8 reg);
+    void cfi_noc(u8 reg);
+    void cif_noc(u8 reg);
 };
 
 #endif /* REG_H_ */

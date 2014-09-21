@@ -465,3 +465,21 @@ void Register::fneg_noc(u8 reg)
     }
 }
 
+void Register::cfi_noc(u8 reg)
+{
+    switch((reg & 0xF) + 1)
+    {
+    case 4: toint32((f32*) (m_bytes + (reg >> 4))); break;
+    case 8: toint64((f64*) (m_bytes + (reg >> 4))); break;
+    }
+}
+
+void Register::cif_noc(u8 reg)
+{
+    switch((reg & 0xF) + 1)
+    {
+    case 4: tofloat32((i32*) (m_bytes + (reg >> 4))); break;
+    case 8: tofloat64((i64*) (m_bytes + (reg >> 4))); break;
+    }
+}
+
