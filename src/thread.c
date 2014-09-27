@@ -43,3 +43,8 @@ void AVM_thread_jump(struct AVM_thread* thread, AVM_size pc)
 {
     thread->pc = thread->bcode->bcb + pc;
 }
+
+void AVM_thread_setnext(struct AVM_thread* thread, struct AVM_thread* next)
+{
+    thread->next = next;
+}

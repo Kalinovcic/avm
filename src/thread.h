@@ -32,6 +32,8 @@ struct AVM_thread
 {
     struct AVM_bytecode* bcode;
     AVM_u8* pc;
+
+    struct AVM_thread* next;
 };
 
 struct AVM_thread* AVM_thread_new();
@@ -39,5 +41,7 @@ void AVM_thread_free(struct AVM_thread* thread);
 
 void AVM_thread_setbc(struct AVM_thread* thread, struct AVM_bytecode* bcode);
 void AVM_thread_jump(struct AVM_thread* thread, AVM_size pc);
+
+void AVM_thread_setnext(struct AVM_thread* thread, struct AVM_thread* next);
 
 #endif /* THREAD_H_ */
