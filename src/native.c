@@ -15,29 +15,23 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * File: error.h
+ * File: native.c
  * Description: 
  * Author: Lovro Kalinovcic
  * 
  */
 
-#ifndef ERROR_H_
-#define ERROR_H_
+#include "native.h"
 
-#include <stdlib.h>
-#include <stdio.h>
+struct AVM_native* AVM_native_new(char* name)
+{
+    struct AVM_native* native = malloc(sizeof(struct AVM_native));
+    native->name = name;
+    return native;
+}
 
-#include "atype.h"
-
-#define AVM_ERRNO_ABYFLOAD      0x0F0F0F0F
-#define AVM_ERRNO_OUTOFMEM      0xF0F0F0F0
-#define AVM_ERRNO_SEGMNFLT      0xFF00FF00
-#define AVM_ERRNO_OVERFLOW      0xFFFF0000
-#define AVM_ERRNO_UNDRFLOW      0xFFFF0010
-#define AVM_ERRNO_BCODLOAD      0xFFFF0100
-#define AVM_ERRNO_BCODEEOF      0xFFFF0110
-#define AVM_ERRNO_BCINVLPC      0xFFFF0120
-
-void AVM_abort(char* msg, AVM_u32 errno);
-
-#endif /* ERROR_H_ */
+void AVM_native_free(struct AVM_native* native)
+{
+    free(native->name);
+    free(native);
+}

@@ -24,21 +24,30 @@
 #ifndef ABY_H_
 #define ABY_H_
 
+#include <stdlib.h>
+
 #include "atype.h"
 #include "bytecode.h"
 #include "error.h"
 #include "memory.h"
+#include "native.h"
 #include "thread.h"
 
 struct AVM_ABY
 {
-    AVM_u32 threadc;
+    AVM_u32 nativec;
+    struct AVM_native** nativev;
     AVM_u32 bcodec;
+    struct AVM_bytecode** bcodev;
 
+    AVM_u32 threadc;
     struct AVM_thread* threadv;
-    struct AVM_bytecode* bcodev;
-
     struct AVM_memory* globalmem;
+
+    AVM_u32 wait;
 };
+
+struct AVM_ABY* AVM_ABY_new(FILE* pF);
+void AVM_ABY_free(struct AVM_ABY* aby);
 
 #endif /* ABY_H_ */
