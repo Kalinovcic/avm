@@ -15,30 +15,21 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * File: atype.h
+ * File: error.h
  * Description: 
  * Author: Lovro Kalinovcic
  * 
  */
 
-#ifndef ATYPE_H_
-#define ATYPE_H_
+#ifndef ERROR_H_
+#define ERROR_H_
 
-#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-typedef int8_t   AVM_i8;
-typedef int16_t  AVM_i16;
-typedef int32_t  AVM_i32;
-typedef int64_t  AVM_i64;
+#define AVM_ERRNO_OVERFLOW      0xFFFF0000
+#define AVM_ERRNO_UNDRFLOW      0xFFFF0010
 
-typedef uint8_t  AVM_u8;
-typedef uint16_t AVM_u16;
-typedef uint32_t AVM_u32;
-typedef uint64_t AVM_u64;
+void AVM_abort(char* msg, int errno);
 
-typedef float    AVM_f32;
-typedef double   AVM_f64;
-
-typedef AVM_u64  AVM_size;
-
-#endif /* ATYPE_H_ */
+#endif /* ERROR_H_ */

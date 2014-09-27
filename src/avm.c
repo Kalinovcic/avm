@@ -25,10 +25,21 @@
 #include <stdio.h>
 
 #include "atype.h"
+#include "stack.h"
 
 int main(int argc, char** argv)
 {
+    struct AVM_stack* stack = AVM_stack_new(1024);
 
+    AVM_u32 src = 2642;
+    AVM_u32 res;
+
+    AVM_stack_push(stack, &src, 4);
+    AVM_stack_pop(stack, &res, 4);
+
+    printf("%d\n", res);
+
+    AVM_stack_free(stack);
 
     return EXIT_SUCCESS;
 }
