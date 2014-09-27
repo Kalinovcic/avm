@@ -23,7 +23,7 @@
 
 #include "error.h"
 
-void AVM_abort(char* msg, int errno)
+void AVM_abort(char* msg, AVM_u32 errno)
 {
     fprintf(stderr, "AVM fatal error [errno: %d]\nmsg: ", errno);
     fprintf(stderr, "%s", msg);

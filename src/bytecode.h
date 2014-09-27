@@ -15,26 +15,32 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * File: error.h
+ * File: bytecode.h
  * Description: 
  * Author: Lovro Kalinovcic
  * 
  */
 
-#ifndef ERROR_H_
-#define ERROR_H_
+#ifndef BYTECODE_H_
+#define BYTECODE_H_
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "atype.h"
+#include "error.h"
 
-#define AVM_ERRNO_OVERFLOW      0xFFFF0000
-#define AVM_ERRNO_UNDRFLOW      0xFFFF0010
-#define AVM_ERRNO_BCODLOAD      0xFFFF0100
-#define AVM_ERRNO_BCODEEOF      0xFFFF0110
-#define AVM_ERRNO_BCINVLPC      0xFFFF0120
+struct AVM_bytecode
+{
+    AVM_u8* bcb;
+    AVM_u8* bce;
+};
 
-void AVM_abort(char* msg, AVM_u32 errno);
+struct AVM_bytecode* AVM_bytecode_new(AVM_size size);
+void AVM_bytecode_free(struct AVM_bytecode* bcode);
 
-#endif /* ERROR_H_ */
+void AVM_bytecode_load(struct AVM_bytecode* bcode, FILE* pF);
+void AVM_bytecode_next(struct AVM_bytecode* bcode, AVM_u8** pc, void* ptr, AVM_size size);
+
+#endif /* BYTECODE_H_ */
