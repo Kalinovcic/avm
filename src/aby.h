@@ -15,28 +15,30 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * File: error.h
+ * File: aby.h
  * Description: 
  * Author: Lovro Kalinovcic
  * 
  */
 
-#ifndef ERROR_H_
-#define ERROR_H_
-
-#include <stdlib.h>
-#include <stdio.h>
+#ifndef ABY_H_
+#define ABY_H_
 
 #include "atype.h"
+#include "bytecode.h"
+#include "error.h"
+#include "memory.h"
+#include "thread.h"
 
-#define AVM_ERRNO_OUTOFMEM      0xF0F0F0F0
-#define AVM_ERRNO_SEGMNFLT      0xFF00FF00
-#define AVM_ERRNO_OVERFLOW      0xFFFF0000
-#define AVM_ERRNO_UNDRFLOW      0xFFFF0010
-#define AVM_ERRNO_BCODLOAD      0xFFFF0100
-#define AVM_ERRNO_BCODEEOF      0xFFFF0110
-#define AVM_ERRNO_BCINVLPC      0xFFFF0120
+struct AVM_ABY
+{
+    AVM_u32 threadc;
+    AVM_u32 bcodec;
 
-void AVM_abort(char* msg, AVM_u32 errno);
+    struct AVM_thread* threadv;
+    struct AVM_bytecode* bcodev;
 
-#endif /* ERROR_H_ */
+    struct AVM_memory* globalmem;
+};
+
+#endif /* ABY_H_ */

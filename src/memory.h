@@ -15,28 +15,31 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * File: error.h
+ * File: memory.h
  * Description: 
  * Author: Lovro Kalinovcic
  * 
  */
 
-#ifndef ERROR_H_
-#define ERROR_H_
+#ifndef MEMORY_H_
+#define MEMORY_H_
 
 #include <stdlib.h>
-#include <stdio.h>
+#include <string.h>
 
 #include "atype.h"
+#include "error.h"
 
-#define AVM_ERRNO_OUTOFMEM      0xF0F0F0F0
-#define AVM_ERRNO_SEGMNFLT      0xFF00FF00
-#define AVM_ERRNO_OVERFLOW      0xFFFF0000
-#define AVM_ERRNO_UNDRFLOW      0xFFFF0010
-#define AVM_ERRNO_BCODLOAD      0xFFFF0100
-#define AVM_ERRNO_BCODEEOF      0xFFFF0110
-#define AVM_ERRNO_BCINVLPC      0xFFFF0120
+struct AVM_memory
+{
+    AVM_u8* memb;
+    AVM_u8* meme;
+};
 
-void AVM_abort(char* msg, AVM_u32 errno);
+struct AVM_memory* AVM_memory_new(AVM_size size);
+void AVM_memory_free(struct AVM_memory* memory);
 
-#endif /* ERROR_H_ */
+void AVM_memory_get(struct AVM_memory* memory, AVM_size addr, AVM_size size, void* ptr);
+void AVM_memory_set(struct AVM_memory* memory, AVM_size addr, AVM_size size, void* ptr);
+
+#endif /* MEMORY_H_ */

@@ -26,7 +26,11 @@
 struct AVM_stack* AVM_stack_new(AVM_size size)
 {
     struct AVM_stack* stack = malloc(sizeof(struct AVM_stack));
+    if(!stack)
+        AVM_abort("out of memory", AVM_ERRNO_OUTOFMEM);
     stack->sb = malloc(size);
+    if(!stack->sb)
+        AVM_abort("out of memory", AVM_ERRNO_OUTOFMEM);
     stack->se = stack->sb + size;
     stack->sp = stack->sb;
     return stack;
@@ -34,6 +38,7 @@ struct AVM_stack* AVM_stack_new(AVM_size size)
 
 void AVM_stack_free(struct AVM_stack* stack)
 {
+    free(stack->sb);
     free(stack);
 }
 

@@ -26,7 +26,11 @@
 struct AVM_bytecode* AVM_bytecode_new(AVM_size size)
 {
     struct AVM_bytecode* bcode = malloc(sizeof(struct AVM_bytecode));
+    if(!bcode)
+        AVM_abort("out of memory", AVM_ERRNO_OUTOFMEM);
     bcode->bcb = malloc(size);
+    if(!bcode->bcb)
+        AVM_abort("out of memory", AVM_ERRNO_OUTOFMEM);
     bcode->bce = bcode->bcb + size;
     return bcode;
 }
