@@ -15,16 +15,14 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * File: avm.cpp
+ * File: avm.c
  * Description: 
  * Author: Lovro Kalinovcic
  * 
  */
 
-#include <iostream>
-
-#include <cstdlib>
-#include <cstdio>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "atype.h"
 
