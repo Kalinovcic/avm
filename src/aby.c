@@ -45,17 +45,13 @@ struct AVM_ABY* AVM_ABY_new(FILE* pF)
 
     AVM_u8 header;
     AVM_ABY_FREAD(header, pF);
-    if(header != 'A')
-        AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
+    if(header != 'A') AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
     AVM_ABY_FREAD(header, pF);
-    if(header != 'B')
-        AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
+    if(header != 'B') AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
     AVM_ABY_FREAD(header, pF);
-    if(header != 'Y')
-        AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
+    if(header != 'Y') AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
     AVM_ABY_FREAD(header, pF);
-    if(header != 0x1B)
-        AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
+    if(header != 0x1B) AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
 
     AVM_ABY_FREAD(aby->version, pF);
 
@@ -78,10 +74,13 @@ struct AVM_ABY* AVM_ABY_new(FILE* pF)
         AVM_bytecode_load(bcode, pF);
         aby->bcodev[i] = bcode;
     }
+    AVM_ABY_FREAD(aby->bcmaini, pF);
 
     aby->threadc = 1;
     aby->threadv = AVM_thread_new();
     AVM_thread_setnext(aby->threadv, aby->threadv);
+    AVM_thread_jump(aby->threadv, 0);
+    AVM_thread_setbc(aby->threadv, aby->bcodev[aby->bcmaini]);
 
     AVM_u32 globalmem_size;
     AVM_ABY_FREAD(globalmem_size, pF);
