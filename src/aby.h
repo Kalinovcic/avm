@@ -35,6 +35,8 @@
 
 struct AVM_ABY
 {
+    AVM_u16 version;
+
     AVM_u32 nativec;
     struct AVM_native** nativev;
     AVM_u32 bcodec;
@@ -43,8 +45,6 @@ struct AVM_ABY
     AVM_u32 threadc;
     struct AVM_thread* threadv;
     struct AVM_memory* globalmem;
-
-    AVM_u32 wait;
 };
 
 struct AVM_ABY* AVM_ABY_new(FILE* pF);

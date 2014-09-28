@@ -43,6 +43,22 @@ struct AVM_ABY* AVM_ABY_new(FILE* pF)
 
     struct AVM_ABY* aby = malloc(sizeof(struct AVM_ABY));
 
+    AVM_u8 header;
+    AVM_ABY_FREAD(header, pF);
+    if(header != 'A')
+        AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
+    AVM_ABY_FREAD(header, pF);
+    if(header != 'B')
+        AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
+    AVM_ABY_FREAD(header, pF);
+    if(header != 'Y')
+        AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
+    AVM_ABY_FREAD(header, pF);
+    if(header != 0x1B)
+        AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
+
+    AVM_ABY_FREAD(aby->version, pF);
+
     AVM_ABY_FREAD(aby->nativec, pF);
     aby->nativev = malloc(sizeof(void*) * aby->nativec);
     for(i = 0; i < aby->nativec; i++)
@@ -70,8 +86,6 @@ struct AVM_ABY* AVM_ABY_new(FILE* pF)
     AVM_u32 globalmem_size;
     AVM_ABY_FREAD(globalmem_size, pF);
     aby->globalmem = AVM_memory_new(globalmem_size);
-
-    aby->wait = 0;
 
     return aby;
 }
