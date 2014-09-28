@@ -36,6 +36,7 @@
 struct AVM_ABY
 {
     AVM_u16 version;
+    AVM_u8 stop;
 
     struct AVM_native** nativev;
     AVM_u32 nativec;
@@ -52,5 +53,10 @@ struct AVM_ABY
 
 struct AVM_ABY* AVM_ABY_new(FILE* pF);
 void AVM_ABY_free(struct AVM_ABY* aby);
+
+void AVM_ABY_execute(struct AVM_ABY* aby);
+void AVM_ABY_next_thread(struct AVM_ABY* aby);
+void AVM_ABY_push_thread(struct AVM_ABY* aby, struct AVM_thread* thread);
+void AVM_ABY_kill_thread(struct AVM_ABY* aby);
 
 #endif /* ABY_H_ */

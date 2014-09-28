@@ -35,6 +35,7 @@ struct AVM_thread
 
     AVM_u8 wait;
 
+    struct AVM_thread* prev;
     struct AVM_thread* next;
 };
 
@@ -42,8 +43,12 @@ struct AVM_thread* AVM_thread_new();
 void AVM_thread_free(struct AVM_thread* thread);
 
 void AVM_thread_setbc(struct AVM_thread* thread, struct AVM_bytecode* bcode);
-void AVM_thread_jump(struct AVM_thread* thread, AVM_size pc);
-
+void AVM_thread_setpc(struct AVM_thread* thread, AVM_size pc);
+void AVM_thread_setprev(struct AVM_thread* thread, struct AVM_thread* prev);
 void AVM_thread_setnext(struct AVM_thread* thread, struct AVM_thread* next);
+
+AVM_bool AVM_thread_eof(struct AVM_thread* thread);
+void AVM_thread_nextrun(struct AVM_thread* thread);
+void AVM_thread_update_wait(struct AVM_thread* thread);
 
 #endif /* THREAD_H_ */

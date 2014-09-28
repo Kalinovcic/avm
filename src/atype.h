@@ -41,4 +41,9 @@ typedef double   AVM_f64;
 
 typedef AVM_u64  AVM_size;
 
+#define AVM_TRUE       -1
+#define AVM_FALSE       0
+
+typedef int      AVM_bool;
+
 #endif /* ATYPE_H_ */

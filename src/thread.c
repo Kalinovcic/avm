@@ -39,12 +39,34 @@ void AVM_thread_setbc(struct AVM_thread* thread, struct AVM_bytecode* bcode)
     thread->bcode = bcode;
 }
 
-void AVM_thread_jump(struct AVM_thread* thread, AVM_size pc)
+void AVM_thread_setpc(struct AVM_thread* thread, AVM_size pc)
 {
     thread->pc = thread->bcode->bcb + pc;
+}
+
+void AVM_thread_setprev(struct AVM_thread* thread, struct AVM_thread* prev)
+{
+    thread->prev = prev;
 }
 
 void AVM_thread_setnext(struct AVM_thread* thread, struct AVM_thread* next)
 {
     thread->next = next;
 }
+
+AVM_bool AVM_thread_eof(struct AVM_thread* thread)
+{
+    if(thread->pc == thread->bcode->bce) return AVM_TRUE;
+    return AVM_FALSE;
+}
+
+void AVM_thread_nextrun(struct AVM_thread* thread)
+{
+
+}
+
+void AVM_thread_update_wait(struct AVM_thread* thread)
+{
+
+}
+

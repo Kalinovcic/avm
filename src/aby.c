@@ -54,6 +54,7 @@ struct AVM_ABY* AVM_ABY_new(FILE* pF)
     if(header != 0x1B) AVM_abort("invalid ABY header", AVM_ERRNO_ABYINVHD);
 
     AVM_ABY_FREAD(aby->version, pF);
+    aby->stop = 0;
 
     AVM_ABY_FREAD(aby->nativec, pF);
     aby->nativev = malloc(sizeof(void*) * aby->nativec);
@@ -78,9 +79,10 @@ struct AVM_ABY* AVM_ABY_new(FILE* pF)
 
     aby->threadc = 1;
     aby->threadv = AVM_thread_new();
-    AVM_thread_setnext(aby->threadv, aby->threadv);
-    AVM_thread_jump(aby->threadv, 0);
     AVM_thread_setbc(aby->threadv, aby->bcodev[aby->bcmaini]);
+    AVM_thread_setpc(aby->threadv, 0);
+    AVM_thread_setprev(aby->threadv, aby->threadv);
+    AVM_thread_setnext(aby->threadv, aby->threadv);
 
     AVM_u32 globalmem_size;
     AVM_ABY_FREAD(globalmem_size, pF);
@@ -113,4 +115,48 @@ void AVM_ABY_free(struct AVM_ABY* aby)
     AVM_memory_free(aby->globalmem);
 
     free(aby);
+}
+
+void AVM_ABY_execute(struct AVM_ABY* aby)
+{
+    while(aby->threadc && !aby->stop)
+    {
+        if(AVM_thread_eof(aby->threadv) == AVM_TRUE)
+        {
+            AVM_ABY_kill_thread(aby);
+            aby->threadc--;
+        }
+        else
+        {
+            AVM_thread_nextrun(aby->threadv);
+            AVM_ABY_next_thread(aby);
+        }
+    }
+}
+
+void AVM_ABY_next_thread(struct AVM_ABY* aby)
+{
+    do
+    {
+        aby->threadv = aby->threadv->next;
+        if(aby->threadv->wait)
+            AVM_thread_update_wait(aby->threadv);
+    }
+    while(aby->threadv->wait);
+}
+
+void AVM_ABY_push_thread(struct AVM_ABY* aby, struct AVM_thread* thread)
+{
+    thread->prev = aby->threadv;
+    thread->next = aby->threadv->next;
+    aby->threadv->next = thread;
+}
+
+void AVM_ABY_kill_thread(struct AVM_ABY* aby)
+{
+    aby->threadv->prev->next = aby->threadv->next;
+    aby->threadv->next->prev = aby->threadv->prev;
+    struct AVM_thread* tofree = aby->threadv;
+    AVM_ABY_next_thread(aby);
+    AVM_thread_free(tofree);
 }
