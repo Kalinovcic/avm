@@ -599,6 +599,9 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_GOTO:
     {
+        AVM_u32 pc;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &pc, 4);
+        AVM_thread_setpc(aby->threadv, pc);
         break;
     }
     case ABY_IF:
