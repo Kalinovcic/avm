@@ -25,7 +25,7 @@
 
 void AVM_abort(char* msg, AVM_u32 errno)
 {
-    fprintf(stderr, "AVM fatal error [errno: %d]\nmsg: ", errno);
+    fprintf(stderr, "AVM fatal error [errno: %.8x]\nmsg: ", errno);
     fprintf(stderr, "%s", msg);
     fprintf(stderr, "\nabort\n");
     exit(errno);

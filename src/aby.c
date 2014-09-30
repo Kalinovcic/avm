@@ -128,7 +128,7 @@ void AVM_ABY_execute(struct AVM_ABY* aby)
         }
         else
         {
-            AVM_thread_nextrun(aby->threadv);
+            AVM_ABYexecutor_nextrun(aby);
             AVM_ABY_next_thread(aby);
         }
     }

@@ -51,6 +51,8 @@ struct AVM_ABY
     struct AVM_memory* globalmem;
 };
 
+#include "abyexe.h"
+
 struct AVM_ABY* AVM_ABY_new(FILE* pF);
 void AVM_ABY_free(struct AVM_ABY* aby);
 

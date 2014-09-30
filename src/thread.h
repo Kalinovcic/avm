@@ -48,7 +48,6 @@ void AVM_thread_setprev(struct AVM_thread* thread, struct AVM_thread* prev);
 void AVM_thread_setnext(struct AVM_thread* thread, struct AVM_thread* next);
 
 AVM_bool AVM_thread_eof(struct AVM_thread* thread);
-void AVM_thread_nextrun(struct AVM_thread* thread);
 void AVM_thread_update_wait(struct AVM_thread* thread);
 
 #endif /* THREAD_H_ */

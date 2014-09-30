@@ -60,11 +60,6 @@ AVM_bool AVM_thread_eof(struct AVM_thread* thread)
     return AVM_FALSE;
 }
 
-void AVM_thread_nextrun(struct AVM_thread* thread)
-{
-
-}
-
 void AVM_thread_update_wait(struct AVM_thread* thread)
 {
 

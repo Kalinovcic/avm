@@ -53,7 +53,7 @@ void AVM_bytecode_next(struct AVM_bytecode* bcode, AVM_u8** pc, void* ptr, AVM_s
 {
     if(*pc < bcode->bcb || *pc >= bcode->bce)
         AVM_abort("invalid PC", AVM_ERRNO_BCINVLPC);
-    if((*pc + size) >= bcode->bce)
+    if((*pc + size) > bcode->bce)
         AVM_abort("unexpected EOF", AVM_ERRNO_BCODEEOF);
     memcpy(ptr, *pc, size);
     *pc += size;
