@@ -415,26 +415,54 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_LNOT4:
     {
+        AVM_u32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_u32 result = !value;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_LNOT8:
     {
+        AVM_u64 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        AVM_u64 result = !value;
+        AVM_stack_push(aby->threadv->stack, &result, 8);
         break;
     }
     case ABY_LAND4:
     {
+        AVM_u32 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_u32 result = value1 && value2;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_LAND8:
     {
+        AVM_u64 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_u64 result = value1 && value2;
+        AVM_stack_push(aby->threadv->stack, &result, 8);
         break;
     }
     case ABY_LOR4:
     {
+        AVM_u32 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_u32 result = value1 || value2;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_LOR8:
     {
+        AVM_u64 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_u64 result = value1 || value2;
+        AVM_stack_push(aby->threadv->stack, &result, 8);
         break;
     }
     case ABY_CI14:
