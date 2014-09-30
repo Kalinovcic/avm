@@ -497,5 +497,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     {
         break;
     }
+    default:
+        abort("unrecognized opcode", AVM_ERRNO_UNREGOPC);
     }
 }
