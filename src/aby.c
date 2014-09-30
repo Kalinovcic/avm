@@ -71,7 +71,7 @@ struct AVM_ABY* AVM_ABY_new(FILE* pF)
     {
         AVM_u32 bcode_size;
         AVM_ABY_FREAD(bcode_size, pF);
-        struct AVM_bytecode* bcode = AVM_bytecode_new(bcode_size);
+        struct AVM_bytecode* bcode = AVM_bytecode_new(bcode_size, 5000);        // FIX ME!!! :'(
         AVM_bytecode_load(bcode, pF);
         aby->bcodev[i] = bcode;
     }

@@ -30,14 +30,17 @@
 
 #include "atype.h"
 #include "error.h"
+#include "memory.h"
 
 struct AVM_bytecode
 {
     AVM_u8* bcb;
     AVM_u8* bce;
+
+    struct AVM_memory* localmem;
 };
 
-struct AVM_bytecode* AVM_bytecode_new(AVM_size size);
+struct AVM_bytecode* AVM_bytecode_new(AVM_size codesize, AVM_size memsize);
 void AVM_bytecode_free(struct AVM_bytecode* bcode);
 
 void AVM_bytecode_load(struct AVM_bytecode* bcode, FILE* pF);
