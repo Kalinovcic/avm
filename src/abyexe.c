@@ -515,26 +515,50 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_CF48:
     {
+        AVM_f32 f32val;
+        AVM_stack_pop(aby->threadv->stack, &f32val, 4);
+        AVM_f64 f64val = (AVM_f64) f32val;
+        AVM_stack_push(aby->threadv->stack, &f64val, 8);
         break;
     }
     case ABY_CF84:
     {
+        AVM_f64 f64val;
+        AVM_stack_pop(aby->threadv->stack, &f64val, 8);
+        AVM_f32 f32val = (AVM_f32) f64val;
+        AVM_stack_push(aby->threadv->stack, &f32val, 4);
         break;
     }
     case ABY_CFI4:
     {
+        AVM_f32 f32val;
+        AVM_stack_pop(aby->threadv->stack, &f32val, 4);
+        AVM_i32 i32val = (AVM_i32) f32val;
+        AVM_stack_push(aby->threadv->stack, &i32val, 4);
         break;
     }
     case ABY_CFI8:
     {
+        AVM_f64 f64val;
+        AVM_stack_pop(aby->threadv->stack, &f64val, 8);
+        AVM_i64 i64val = (AVM_i64) f64val;
+        AVM_stack_push(aby->threadv->stack, &i64val, 8);
         break;
     }
     case ABY_CIF4:
     {
+        AVM_f32 i32val;
+        AVM_stack_pop(aby->threadv->stack, &i32val, 4);
+        AVM_i32 f32val = (AVM_f32) i32val;
+        AVM_stack_push(aby->threadv->stack, &f32val, 4);
         break;
     }
     case ABY_CIF8:
     {
+        AVM_i64 i64val;
+        AVM_stack_pop(aby->threadv->stack, &i64val, 8);
+        AVM_f64 f64val = (AVM_f64) i64val;
+        AVM_stack_push(aby->threadv->stack, &f64val, 8);
         break;
     }
     case ABY_GOTO:
