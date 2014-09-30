@@ -635,74 +635,212 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_CMP4:
     {
+        AVM_u32 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_CMP8:
     {
+        AVM_u64 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_ICMP4:
     {
+        AVM_i32 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_ICMP8:
     {
+        AVM_i64 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_IUCMP4:
     {
+        AVM_i32 value1;
+        AVM_u32 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_i32 result = 0;
+        if(value1 < 0 || (AVM_u32) value1 < value2) result = -1;
+        else if((AVM_u32) value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_IUCMP8:
     {
+        AVM_i64 value1;
+        AVM_u64 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_i32 result = 0;
+        if(value1 < 0 || (AVM_u64) value1 < value2) result = -1;
+        else if((AVM_u64) value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_IUCMPR4:
     {
+        AVM_u32 value1;
+        AVM_i32 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_i32 result = 0;
+        if(value2 < 0 || value1 < (AVM_u32) value2) result = -1;
+        else if(value1 > (AVM_u32) value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_IUCMPR8:
     {
+        AVM_u64 value1;
+        AVM_i64 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_i32 result = 0;
+        if(value2 < 0 || value1 < (AVM_u64) value2) result = -1;
+        else if(value1 > (AVM_u64) value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FCMP4:
     {
+        AVM_f32 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FCMP8:
     {
+        AVM_f32 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FICMP4:
     {
+        AVM_f32 value1;
+        AVM_i32 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FICMP8:
     {
+        AVM_f64 value1;
+        AVM_i64 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FICMPR4:
     {
+        AVM_i32 value1;
+        AVM_f32 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FICMPR8:
     {
+        AVM_i64 value1;
+        AVM_f64 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_i32 result = 0;
+        if(value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FUCMP4:
     {
+        AVM_f32 value1;
+        AVM_u32 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_i32 result = 0;
+        if(value1 < 0.0f || value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FUCMP8:
     {
+        AVM_f64 value1;
+        AVM_u64 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_i32 result = 0;
+        if(value1 < 0.0 || value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FUCMPR4:
     {
+        AVM_u32 value1;
+        AVM_f32 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        AVM_i32 result = 0;
+        if(value2 < 0.0f || value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FUCMPR8:
     {
+        AVM_u64 value1;
+        AVM_f64 value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        AVM_i32 result = 0;
+        if(value2 < 0.0f || value1 < value2) result = -1;
+        else if(value1 > value2) result = 1;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_CALL:
