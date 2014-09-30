@@ -39,58 +39,116 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_PUSH4:
     {
+        AVM_u32 value;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &value, 4);
+        AVM_stack_push(aby->threadv->stack, &value, 4);
         break;
     }
     case ABY_PUSH8:
     {
+        AVM_u64 value;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &value, 8);
+        AVM_stack_push(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_POP4:
     {
+        AVM_u32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
         break;
     }
     case ABY_POP8:
     {
+        AVM_u64 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_LOAD4:
     {
+        AVM_u32 mpos;
+        AVM_u32 value;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_memory_set(aby->threadv->bcode->localmem, mpos, 4, &value);
         break;
     }
     case ABY_LOAD8:
     {
+        AVM_u32 mpos;
+        AVM_u64 value;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        AVM_memory_set(aby->threadv->bcode->localmem, mpos, 8, &value);
         break;
     }
     case ABY_FETCH4:
     {
+        AVM_u32 mpos;
+        AVM_u32 result;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_memory_get(aby->threadv->bcode->localmem, mpos, 4, &result);
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FETCH8:
     {
+        AVM_u32 mpos;
+        AVM_u64 result;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_memory_get(aby->threadv->bcode->localmem, mpos, 8, &result);
+        AVM_stack_push(aby->threadv->stack, &result, 8);
         break;
     }
     case ABY_LOADWIDE4:
     {
+        AVM_u32 mpos;
+        AVM_u32 value;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_memory_set(aby->globalmem, mpos, 4, &value);
         break;
     }
     case ABY_LOADWIDE8:
     {
+        AVM_u32 mpos;
+        AVM_u64 value;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        AVM_memory_set(aby->globalmem, mpos, 8, &value);
         break;
     }
     case ABY_FETCHWIDE4:
     {
+        AVM_u32 mpos;
+        AVM_u32 result;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_memory_get(aby->globalmem, mpos, 4, &result);
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_FETCHWIDE8:
     {
+        AVM_u32 mpos;
+        AVM_u64 result;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_memory_get(aby->globalmem, mpos, 8, &result);
+        AVM_stack_push(aby->threadv->stack, &result, 8);
         break;
     }
     case ABY_ALLOC:
     {
+        AVM_u64 size;
+        AVM_u64 pointer;
+        AVM_stack_pop(aby->threadv->stack, &size, 8);
+        AVM_memory_allocate(size, &pointer);
+        AVM_stack_push(aby->threadv->stack, &pointer, 8);
         break;
     }
     case ABY_FREE:
     {
+        AVM_u64 pointer;
+        AVM_stack_pop(aby->threadv->stack, &pointer, 8);
+        AVM_memory_delete(pointer);
         break;
     }
     case ABY_REFL1:
@@ -335,26 +393,50 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_CI14:
     {
+        AVM_i8 i8val;
+        AVM_stack_pop(aby->threadv->stack, &i8val, 1);
+        AVM_i32 i32val = (AVM_i32) i32val;
+        AVM_stack_push(aby->threadv->stack, &i32val, 4);
         break;
     }
     case ABY_CI24:
     {
+        AVM_i16 i16val;
+        AVM_stack_pop(aby->threadv->stack, &i16val, 2);
+        AVM_i32 i32val = (AVM_i32) i32val;
+        AVM_stack_push(aby->threadv->stack, &i32val, 4);
         break;
     }
     case ABY_CI41:
     {
+        AVM_i32 i32val;
+        AVM_stack_pop(aby->threadv->stack, &i32val, 4);
+        AVM_i8 i8val = (AVM_i8) i32val;
+        AVM_stack_push(aby->threadv->stack, &i8val, 1);
         break;
     }
     case ABY_CI42:
     {
+        AVM_i32 i32val;
+        AVM_stack_pop(aby->threadv->stack, &i32val, 4);
+        AVM_i16 i16val = (AVM_i16) i32val;
+        AVM_stack_push(aby->threadv->stack, &i16val, 2);
         break;
     }
     case ABY_CI48:
     {
+        AVM_i32 i32val;
+        AVM_stack_pop(aby->threadv->stack, &i32val, 4);
+        AVM_i64 i64val = (AVM_i64) i32val;
+        AVM_stack_push(aby->threadv->stack, &i64val, 8);
         break;
     }
     case ABY_CI84:
     {
+        AVM_i64 i64val;
+        AVM_stack_pop(aby->threadv->stack, &i64val, 8);
+        AVM_i32 i32val = (AVM_i32) i32val;
+        AVM_stack_push(aby->threadv->stack, &i32val, 4);
         break;
     }
     case ABY_CF48:
@@ -498,6 +580,6 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         break;
     }
     default:
-        abort("unrecognized opcode", AVM_ERRNO_UNREGOPC);
+        AVM_abort("unrecognized opcode", AVM_ERRNO_UNREGOPC);
     }
 }

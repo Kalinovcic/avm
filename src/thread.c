@@ -26,11 +26,13 @@
 struct AVM_thread* AVM_thread_new()
 {
     struct AVM_thread* thread = malloc(sizeof(struct AVM_thread));
+    thread->stack = AVM_stack_new(2048);        // FIX ME!!!  :'(
     return thread;
 }
 
 void AVM_thread_free(struct AVM_thread* thread)
 {
+    AVM_stack_free(thread->stack);
     free(thread);
 }
 

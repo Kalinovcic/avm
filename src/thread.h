@@ -31,6 +31,8 @@
 struct AVM_thread
 {
     struct AVM_bytecode* bcode;
+    struct AVM_stack* stack;
+
     AVM_u8* pc;
 
     AVM_u8 wait;

@@ -43,7 +43,7 @@ void AVM_memory_free(struct AVM_memory* memory)
 
 inline int AVM_in_range(struct AVM_memory* memory, AVM_u8* addr)
 {
-    return (memory->memb >= addr) && (addr < memory->meme);
+    return (memory->memb <= addr) && (addr < memory->meme);
 }
 
 inline void AVM_range_check(struct AVM_memory* memory, AVM_size addr)
@@ -64,4 +64,16 @@ void AVM_memory_set(struct AVM_memory* memory, AVM_size addr, AVM_size size, voi
     AVM_range_check(memory, addr);
     AVM_range_check(memory, addr + size - 1);
     memcpy(memory->memb + addr, ptr, size);
+}
+
+void AVM_memory_allocate(AVM_size size, AVM_u64* pointer)
+{
+    *pointer = (AVM_u64) malloc(size);
+    if(!*pointer)
+        AVM_abort("out of memory", AVM_ERRNO_OUTOFMEM);
+}
+
+void AVM_memory_delete(AVM_u64 pointer)
+{
+    free((void*) pointer);
 }

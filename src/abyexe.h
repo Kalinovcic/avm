@@ -27,6 +27,7 @@
 #include "aby.h"
 #include "atype.h"
 #include "bytecode.h"
+#include "stack.h"
 
 #define ABY_DEBUGOUT     1
 
