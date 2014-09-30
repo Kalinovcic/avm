@@ -359,26 +359,62 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_SHL4:
     {
+        AVM_u32 value;
+        AVM_u32 shiftam;
+        AVM_stack_pop(aby->threadv->stack, &shiftam, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        value <<= shiftam;
+        AVM_stack_push(aby->threadv->stack, &value, 4);
         break;
     }
     case ABY_SHL8:
     {
+        AVM_u64 value;
+        AVM_u32 shiftam;
+        AVM_stack_pop(aby->threadv->stack, &shiftam, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        value <<= shiftam;
+        AVM_stack_push(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_SHR4:
     {
+        AVM_i32 value;
+        AVM_u32 shiftam;
+        AVM_stack_pop(aby->threadv->stack, &shiftam, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        value >>= shiftam;  // implementation defined behavior
+        AVM_stack_push(aby->threadv->stack, &value, 4);
         break;
     }
     case ABY_SHR8:
     {
+        AVM_i64 value;
+        AVM_u32 shiftam;
+        AVM_stack_pop(aby->threadv->stack, &shiftam, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        value >>= shiftam;  // implementation defined behavior
+        AVM_stack_push(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_SHRU4:
     {
+        AVM_u32 value;
+        AVM_u32 shiftam;
+        AVM_stack_pop(aby->threadv->stack, &shiftam, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        value >>= shiftam;
+        AVM_stack_push(aby->threadv->stack, &value, 4);
         break;
     }
     case ABY_SHRU8:
     {
+        AVM_u64 value;
+        AVM_u32 shiftam;
+        AVM_stack_pop(aby->threadv->stack, &shiftam, 4);
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        value >>= shiftam;
+        AVM_stack_push(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_BNOT4:
