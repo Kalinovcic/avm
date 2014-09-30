@@ -603,34 +603,66 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_IF:
     {
+        AVM_u32 pc, value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &pc, 4);
+        if(value) AVM_thread_setpc(aby->threadv, pc);
         break;
     }
     case ABY_IFN:
     {
+        AVM_u32 pc, value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &pc, 4);
+        if(!value) AVM_thread_setpc(aby->threadv, pc);
         break;
     }
     case ABY_LTNL:
     {
+        AVM_i32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_i32 result = value < 0;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_LENL:
     {
+        AVM_i32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_i32 result = value <= 0;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_GTNL:
     {
+        AVM_i32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_i32 result = value > 0;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_GENL:
     {
+        AVM_i32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_i32 result = value >= 0;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_EQNL:
     {
+        AVM_i32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_i32 result = value == 0;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_NENL:
     {
+        AVM_i32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_i32 result = value != 0;
+        AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
     case ABY_CMP4:
