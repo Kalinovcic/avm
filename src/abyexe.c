@@ -327,18 +327,34 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_NEGI4:
     {
+        AVM_i32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        value = -value;
+        AVM_stack_push(aby->threadv->stack, &value, 4);
         break;
     }
     case ABY_NEGI8:
     {
+        AVM_i64 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        value = -value;
+        AVM_stack_push(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_NEGF4:
     {
+        AVM_f32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        value = -value;
+        AVM_stack_push(aby->threadv->stack, &value, 4);
         break;
     }
     case ABY_NEGF8:
     {
+        AVM_f64 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        value = -value;
+        AVM_stack_push(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_SHL4:
