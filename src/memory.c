@@ -66,14 +66,24 @@ void AVM_memory_set(struct AVM_memory* memory, AVM_size addr, AVM_size size, voi
     memcpy(memory->memb + addr, ptr, size);
 }
 
-void AVM_memory_allocate(AVM_size size, AVM_u64* pointer)
+void AVM_memory_heapalloc(AVM_size size, AVM_u64* pointer)
 {
     *pointer = (AVM_u64) malloc(size);
     if(!*pointer)
         AVM_abort("out of memory", AVM_ERRNO_OUTOFMEM);
 }
 
-void AVM_memory_delete(AVM_u64 pointer)
+void AVM_memory_heapfree(AVM_u64 pointer)
 {
     free((void*) pointer);
+}
+
+void AVM_memory_heapget(AVM_u64 pointer, void* ptr, AVM_size size)
+{
+    memcpy(ptr, (void*) pointer, size);
+}
+
+void AVM_memory_heapset(AVM_u64 pointer, void* ptr, AVM_size size)
+{
+    memcpy((void*) pointer, ptr, size);
 }

@@ -140,7 +140,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u64 size;
         AVM_u64 pointer;
         AVM_stack_pop(aby->threadv->stack, &size, 8);
-        AVM_memory_allocate(size, &pointer);
+        AVM_memory_heapalloc(size, &pointer);
         AVM_stack_push(aby->threadv->stack, &pointer, 8);
         break;
     }
@@ -148,39 +148,79 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     {
         AVM_u64 pointer;
         AVM_stack_pop(aby->threadv->stack, &pointer, 8);
-        AVM_memory_delete(pointer);
+        AVM_memory_heapfree(pointer);
         break;
     }
     case ABY_REFL1:
     {
+        AVM_u64 pointer;
+        AVM_u8 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 1);
+        AVM_stack_pop(aby->threadv->stack, &pointer, 8);
+        AVM_memory_heapset(pointer, &value, 1);
         break;
     }
     case ABY_REFL2:
     {
+        AVM_u64 pointer;
+        AVM_u16 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 2);
+        AVM_stack_pop(aby->threadv->stack, &pointer, 8);
+        AVM_memory_heapset(pointer, &value, 2);
         break;
     }
     case ABY_REFL4:
     {
+        AVM_u64 pointer;
+        AVM_u32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        AVM_stack_pop(aby->threadv->stack, &pointer, 8);
+        AVM_memory_heapset(pointer, &value, 4);
         break;
     }
     case ABY_REFL8:
     {
+        AVM_u64 pointer;
+        AVM_u64 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        AVM_stack_pop(aby->threadv->stack, &pointer, 8);
+        AVM_memory_heapset(pointer, &value, 8);
         break;
     }
     case ABY_EXTR1:
     {
+        AVM_u64 pointer;
+        AVM_u8 value;
+        AVM_stack_pop(aby->threadv->stack, &pointer, 8);
+        AVM_memory_heapget(pointer, &value, 1);
+        AVM_stack_push(aby->threadv->stack, &value, 1);
         break;
     }
     case ABY_EXTR2:
     {
+        AVM_u64 pointer;
+        AVM_u16 value;
+        AVM_stack_pop(aby->threadv->stack, &pointer, 8);
+        AVM_memory_heapget(pointer, &value, 2);
+        AVM_stack_push(aby->threadv->stack, &value, 2);
         break;
     }
     case ABY_EXTR4:
     {
+        AVM_u64 pointer;
+        AVM_u32 value;
+        AVM_stack_pop(aby->threadv->stack, &pointer, 8);
+        AVM_memory_heapget(pointer, &value, 4);
+        AVM_stack_push(aby->threadv->stack, &value, 4);
         break;
     }
     case ABY_EXTR8:
     {
+        AVM_u64 pointer;
+        AVM_u64 value;
+        AVM_stack_pop(aby->threadv->stack, &pointer, 8);
+        AVM_memory_heapget(pointer, &value, 8);
+        AVM_stack_push(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_SWAP4:
