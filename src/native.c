@@ -35,3 +35,8 @@ void AVM_native_free(struct AVM_native* native)
     free(native->name);
     free(native);
 }
+
+void AVM_native_invoke(struct AVM_native* native, struct AVM_ABY* aby)
+{
+
+}

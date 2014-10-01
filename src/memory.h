@@ -41,6 +41,7 @@ void AVM_memory_free(struct AVM_memory* memory);
 
 void AVM_memory_get(struct AVM_memory* memory, AVM_size addr, AVM_size size, void* ptr);
 void AVM_memory_set(struct AVM_memory* memory, AVM_size addr, AVM_size size, void* ptr);
+void AVM_memory_ptrof(struct AVM_memory* memory, AVM_size addr, void* ptr);
 
 void AVM_memory_heapalloc(AVM_size size, AVM_u64* pointer);
 void AVM_memory_heapfree(AVM_u64 pointer);

@@ -66,6 +66,12 @@ void AVM_memory_set(struct AVM_memory* memory, AVM_size addr, AVM_size size, voi
     memcpy(memory->memb + addr, ptr, size);
 }
 
+void AVM_memory_ptrof(struct AVM_memory* memory, AVM_size addr, void* ptr)
+{
+    AVM_u8* resptr = memory->memb + addr;
+    memcpy(ptr, &resptr, sizeof(void*));
+}
+
 void AVM_memory_heapalloc(AVM_size size, AVM_u64* pointer)
 {
     *pointer = (AVM_u64) malloc(size);

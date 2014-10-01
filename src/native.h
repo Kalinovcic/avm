@@ -24,6 +24,8 @@
 #ifndef NATIVE_H_
 #define NATIVE_H_
 
+#include "aby.h"
+
 #include <stdlib.h>
 
 struct AVM_native
@@ -33,5 +35,7 @@ struct AVM_native
 
 struct AVM_native* AVM_native_new(char* name);
 void AVM_native_free(struct AVM_native* native);
+
+void AVM_native_invoke(struct AVM_native* native, struct AVM_ABY* aby);
 
 #endif /* NATIVE_H_ */

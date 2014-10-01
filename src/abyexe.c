@@ -135,6 +135,24 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_stack_push(aby->threadv->stack, &result, 8);
         break;
     }
+    case ABY_VARPTR:
+    {
+        AVM_u32 mpos;
+        AVM_u64 result;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_memory_ptrof(aby->threadv->localmem, mpos, &result);
+        AVM_stack_push(aby->threadv->stack, &result, 8);
+        break;
+    }
+    case ABY_VARPTRWIDE:
+    {
+        AVM_u32 mpos;
+        AVM_u64 result;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
+        AVM_memory_ptrof(aby->globalmem, mpos, &result);
+        AVM_stack_push(aby->threadv->stack, &result, 8);
+        break;
+    }
     case ABY_ALLOC:
     {
         AVM_u64 size;
@@ -796,6 +814,25 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         aby->threadv->pc = aby->threadv->bcode->bcb + pc;
         break;
     }
+    case ABY_CALL:
+    {
+        AVM_u32 function;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &function, 4);
+        AVM_thread_push(aby->threadv, aby->bcodev[function]);
+        break;
+    }
+    case ABY_RETURN:
+    {
+        AVM_thread_pop(aby->threadv);
+        break;
+    }
+    case ABY_NATIVE:
+    {
+        AVM_u32 native;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &native, 4);
+        AVM_native_invoke(aby->nativev[native], aby);
+        break;
+    }
     case ABY_IF:
     {
         AVM_u32 pc, value;
@@ -1068,18 +1105,6 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         if(value1 < 0.0 || value1 < value2) result = -1;
         else if(value1 > value2) result = 1;
         AVM_stack_push(aby->threadv->stack, &result, 4);
-        break;
-    }
-    case ABY_CALL:
-    {
-        AVM_u32 function;
-        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &function, 4);
-        AVM_thread_push(aby->threadv, aby->bcodev[function]);
-        break;
-    }
-    case ABY_RETURN:
-    {
-        AVM_thread_pop(aby->threadv);
         break;
     }
     default:

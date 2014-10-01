@@ -30,7 +30,6 @@
 #include "bytecode.h"
 #include "error.h"
 #include "memory.h"
-#include "native.h"
 #include "thread.h"
 
 struct AVM_ABY
@@ -52,6 +51,7 @@ struct AVM_ABY
 };
 
 #include "abyexe.h"
+#include "native.h"
 
 struct AVM_ABY* AVM_ABY_new(FILE* pF);
 void AVM_ABY_free(struct AVM_ABY* aby);

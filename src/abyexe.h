@@ -27,6 +27,7 @@
 #include "aby.h"
 #include "atype.h"
 #include "bytecode.h"
+#include "native.h"
 #include "stack.h"
 
 #define ABY_DEBUGOUT     1
@@ -45,6 +46,8 @@
 #define ABY_FETCH8       0x19
 #define ABY_FETCHWIDE4   0x1A
 #define ABY_FETCHWIDE8   0x1B
+#define ABY_VARPTR       0x1C
+#define ABY_VARPTRWIDE   0x1D
 
 #define ABY_ALLOC        0x20
 #define ABY_FREE         0x21
@@ -130,6 +133,7 @@
 #define ABY_GOTO         0xD0
 #define ABY_CALL         0xD1
 #define ABY_RETURN       0xD2
+#define ABY_NATIVE       0xD3
 #define ABY_IF           0xD4
 #define ABY_IFN          0xD5
 #define ABY_LTNL         0xDA
