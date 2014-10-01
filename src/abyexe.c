@@ -419,34 +419,72 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_BNOT4:
     {
+        AVM_u32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
+        value = ~value;
+        AVM_stack_push(aby->threadv->stack, &value, 4);
         break;
     }
     case ABY_BNOT8:
     {
+        AVM_u64 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 8);
+        value = ~value;
+        AVM_stack_push(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_BAND4:
     {
+        AVM_u32 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        value1 &= value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 4);
         break;
     }
     case ABY_BAND8:
     {
+        AVM_u64 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        value1 &= value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 8);
         break;
     }
     case ABY_BXOR4:
     {
+        AVM_u32 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        value1 ^= value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 4);
         break;
     }
     case ABY_BXOR8:
     {
+        AVM_u64 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        value1 ^= value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 8);
         break;
     }
     case ABY_BOR4:
     {
+        AVM_u32 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 4);
+        AVM_stack_pop(aby->threadv->stack, &value2, 4);
+        value1 |= value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 4);
         break;
     }
     case ABY_BOR8:
     {
+        AVM_u64 value1, value2;
+        AVM_stack_pop(aby->threadv->stack, &value1, 8);
+        AVM_stack_pop(aby->threadv->stack, &value2, 8);
+        value1 |= value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 8);
         break;
     }
     case ABY_LNOT4:
@@ -461,8 +499,8 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     {
         AVM_u64 value;
         AVM_stack_pop(aby->threadv->stack, &value, 8);
-        AVM_u64 result = !value;
-        AVM_stack_push(aby->threadv->stack, &result, 8);
+        value = !value;
+        AVM_stack_push(aby->threadv->stack, &value, 8);
         break;
     }
     case ABY_LAND4:
@@ -470,8 +508,8 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u32 value1, value2;
         AVM_stack_pop(aby->threadv->stack, &value1, 4);
         AVM_stack_pop(aby->threadv->stack, &value2, 4);
-        AVM_u32 result = value1 && value2;
-        AVM_stack_push(aby->threadv->stack, &result, 4);
+        value1 = value1 && value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 4);
         break;
     }
     case ABY_LAND8:
@@ -479,8 +517,8 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u64 value1, value2;
         AVM_stack_pop(aby->threadv->stack, &value1, 8);
         AVM_stack_pop(aby->threadv->stack, &value2, 8);
-        AVM_u64 result = value1 && value2;
-        AVM_stack_push(aby->threadv->stack, &result, 8);
+        value1 = value1 && value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 8);
         break;
     }
     case ABY_LOR4:
@@ -488,8 +526,8 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u32 value1, value2;
         AVM_stack_pop(aby->threadv->stack, &value1, 4);
         AVM_stack_pop(aby->threadv->stack, &value2, 4);
-        AVM_u32 result = value1 || value2;
-        AVM_stack_push(aby->threadv->stack, &result, 4);
+        value1 = value1 || value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 4);
         break;
     }
     case ABY_LOR8:
@@ -497,8 +535,8 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u64 value1, value2;
         AVM_stack_pop(aby->threadv->stack, &value1, 8);
         AVM_stack_pop(aby->threadv->stack, &value2, 8);
-        AVM_u64 result = value1 || value2;
-        AVM_stack_push(aby->threadv->stack, &result, 8);
+        value1 = value1 || value2;
+        AVM_stack_push(aby->threadv->stack, &value1, 8);
         break;
     }
     case ABY_CI14:
