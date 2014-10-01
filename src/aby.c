@@ -79,10 +79,9 @@ struct AVM_ABY* AVM_ABY_new(FILE* pF)
 
     aby->threadc = 1;
     aby->threadv = AVM_thread_new();
-    AVM_thread_setbc(aby->threadv, aby->bcodev[aby->bcmaini]);
-    AVM_thread_setpc(aby->threadv, 0);
-    AVM_thread_setprev(aby->threadv, aby->threadv);
-    AVM_thread_setnext(aby->threadv, aby->threadv);
+    AVM_thread_push(aby->threadv, aby->bcodev[aby->bcmaini]);
+    aby->threadv->prev = aby->threadv;
+    aby->threadv->next = aby->threadv;
 
     AVM_u32 globalmem_size;
     AVM_ABY_FREAD(globalmem_size, pF);
@@ -121,7 +120,7 @@ void AVM_ABY_execute(struct AVM_ABY* aby)
 {
     while(aby->threadc && !aby->stop)
     {
-        if(AVM_thread_eof(aby->threadv) == AVM_TRUE)
+        if(!aby->threadv->returnc)
         {
             AVM_ABY_kill_thread(aby);
             aby->threadc--;

@@ -27,13 +27,21 @@
 #include "atype.h"
 #include "bytecode.h"
 #include "error.h"
+#include "stack.h"
+
+#define AVM_RETURN_MAXDEPTH             (2048)
+#define AVM_RETURN_UNITSIZE             (sizeof(void*) * 3)
+#define AVM_RETURNSTACK_SIZE            (AVM_RETURN_MAXDEPTH * AVM_RETURN_UNITSIZE)
 
 struct AVM_thread
 {
-    struct AVM_bytecode* bcode;
     struct AVM_stack* stack;
+    struct AVM_stack* returnstack;
+    AVM_u32 returnc;
 
     AVM_u8* pc;
+    struct AVM_bytecode* bcode;
+    struct AVM_memory* localmem;
 
     AVM_u8 wait;
 
@@ -44,12 +52,9 @@ struct AVM_thread
 struct AVM_thread* AVM_thread_new();
 void AVM_thread_free(struct AVM_thread* thread);
 
-void AVM_thread_setbc(struct AVM_thread* thread, struct AVM_bytecode* bcode);
-void AVM_thread_setpc(struct AVM_thread* thread, AVM_size pc);
-void AVM_thread_setprev(struct AVM_thread* thread, struct AVM_thread* prev);
-void AVM_thread_setnext(struct AVM_thread* thread, struct AVM_thread* next);
+void AVM_thread_push(struct AVM_thread* thread, struct AVM_bytecode* bcode);
+void AVM_thread_pop(struct AVM_thread* thread);
 
-AVM_bool AVM_thread_eof(struct AVM_thread* thread);
 void AVM_thread_update_wait(struct AVM_thread* thread);
 
 #endif /* THREAD_H_ */

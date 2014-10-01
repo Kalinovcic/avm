@@ -69,7 +69,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u32 value;
         AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
         AVM_stack_pop(aby->threadv->stack, &value, 4);
-        AVM_memory_set(aby->threadv->bcode->localmem, mpos, 4, &value);
+        AVM_memory_set(aby->threadv->localmem, mpos, 4, &value);
         break;
     }
     case ABY_LOAD8:
@@ -78,7 +78,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u64 value;
         AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
         AVM_stack_pop(aby->threadv->stack, &value, 8);
-        AVM_memory_set(aby->threadv->bcode->localmem, mpos, 8, &value);
+        AVM_memory_set(aby->threadv->localmem, mpos, 8, &value);
         break;
     }
     case ABY_FETCH4:
@@ -86,7 +86,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u32 mpos;
         AVM_u32 result;
         AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
-        AVM_memory_get(aby->threadv->bcode->localmem, mpos, 4, &result);
+        AVM_memory_get(aby->threadv->localmem, mpos, 4, &result);
         AVM_stack_push(aby->threadv->stack, &result, 4);
         break;
     }
@@ -95,7 +95,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u32 mpos;
         AVM_u64 result;
         AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &mpos, 4);
-        AVM_memory_get(aby->threadv->bcode->localmem, mpos, 8, &result);
+        AVM_memory_get(aby->threadv->localmem, mpos, 8, &result);
         AVM_stack_push(aby->threadv->stack, &result, 8);
         break;
     }
@@ -793,7 +793,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     {
         AVM_u32 pc;
         AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &pc, 4);
-        AVM_thread_setpc(aby->threadv, pc);
+        aby->threadv->pc = aby->threadv->bcode->bcb + pc;
         break;
     }
     case ABY_IF:
@@ -801,7 +801,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u32 pc, value;
         AVM_stack_pop(aby->threadv->stack, &value, 4);
         AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &pc, 4);
-        if(value) AVM_thread_setpc(aby->threadv, pc);
+        if(value) aby->threadv->pc = aby->threadv->bcode->bcb + pc;
         break;
     }
     case ABY_IFN:
@@ -809,7 +809,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u32 pc, value;
         AVM_stack_pop(aby->threadv->stack, &value, 4);
         AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &pc, 4);
-        if(!value) AVM_thread_setpc(aby->threadv, pc);
+        if(!value) aby->threadv->pc = aby->threadv->bcode->bcb + pc;
         break;
     }
     case ABY_LTNL:
@@ -1072,10 +1072,14 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_CALL:
     {
+        AVM_u32 function;
+        AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &function, 4);
+        AVM_thread_push(aby->threadv, aby->bcodev[function]);
         break;
     }
     case ABY_RETURN:
     {
+        AVM_thread_pop(aby->threadv);
         break;
     }
     default:

@@ -37,7 +37,7 @@ struct AVM_bytecode
     AVM_u8* bcb;
     AVM_u8* bce;
 
-    struct AVM_memory* localmem;
+    AVM_size memsize;
 };
 
 struct AVM_bytecode* AVM_bytecode_new(AVM_size codesize, AVM_size memsize);

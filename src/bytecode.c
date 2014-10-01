@@ -33,13 +33,12 @@ struct AVM_bytecode* AVM_bytecode_new(AVM_size codesize, AVM_size memsize)
         AVM_abort("out of memory", AVM_ERRNO_OUTOFMEM);
     bcode->bce = bcode->bcb + codesize;
 
-    bcode->localmem = AVM_memory_new(memsize);
+    bcode->memsize = memsize;
     return bcode;
 }
 
 void AVM_bytecode_free(struct AVM_bytecode* bcode)
 {
-    AVM_memory_free(bcode->localmem);
     free(bcode->bcb);
     free(bcode);
 }

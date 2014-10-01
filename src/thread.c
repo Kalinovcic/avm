@@ -27,6 +27,8 @@ struct AVM_thread* AVM_thread_new()
 {
     struct AVM_thread* thread = malloc(sizeof(struct AVM_thread));
     thread->stack = AVM_stack_new(2048);        // FIX ME!!!  :'(
+    thread->returnstack = AVM_stack_new(AVM_RETURNSTACK_SIZE);
+    thread->returnc = 0;
     return thread;
 }
 
@@ -36,30 +38,32 @@ void AVM_thread_free(struct AVM_thread* thread)
     free(thread);
 }
 
-void AVM_thread_setbc(struct AVM_thread* thread, struct AVM_bytecode* bcode)
+void AVM_thread_push(struct AVM_thread* thread, struct AVM_bytecode* bcode)
 {
+    if(thread->returnc)
+    {
+        AVM_stack_push(thread->returnstack, &thread->pc, sizeof(void*));
+        AVM_stack_push(thread->returnstack, &thread->bcode, sizeof(void*));
+        AVM_stack_push(thread->returnstack, &thread->localmem, sizeof(void*));
+    }
+    thread->returnc++;
+
+    thread->pc = bcode->bcb;
     thread->bcode = bcode;
+    thread->localmem = AVM_memory_new(bcode->memsize);
 }
 
-void AVM_thread_setpc(struct AVM_thread* thread, AVM_size pc)
+void AVM_thread_pop(struct AVM_thread* thread)
 {
-    thread->pc = thread->bcode->bcb + pc;
-}
+    AVM_memory_free(thread->localmem);
 
-void AVM_thread_setprev(struct AVM_thread* thread, struct AVM_thread* prev)
-{
-    thread->prev = prev;
-}
-
-void AVM_thread_setnext(struct AVM_thread* thread, struct AVM_thread* next)
-{
-    thread->next = next;
-}
-
-AVM_bool AVM_thread_eof(struct AVM_thread* thread)
-{
-    if(thread->pc == thread->bcode->bce) return AVM_TRUE;
-    return AVM_FALSE;
+    thread->returnc--;
+    if(thread->returnc)
+    {
+        AVM_stack_pop(thread->returnstack, &thread->localmem, sizeof(void*));
+        AVM_stack_pop(thread->returnstack, &thread->bcode, sizeof(void*));
+        AVM_stack_pop(thread->returnstack, &thread->pc, sizeof(void*));
+    }
 }
 
 void AVM_thread_update_wait(struct AVM_thread* thread)
