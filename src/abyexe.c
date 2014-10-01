@@ -154,19 +154,21 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     case ABY_REFL1:
     {
         AVM_u64 pointer;
-        AVM_u8 value;
-        AVM_stack_pop(aby->threadv->stack, &value, 1);
+        AVM_u32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
         AVM_stack_pop(aby->threadv->stack, &pointer, 8);
-        AVM_memory_heapset(pointer, &value, 1);
+        AVM_u8 propvalue = (AVM_u8) value;
+        AVM_memory_heapset(pointer, &propvalue, 1);
         break;
     }
     case ABY_REFL2:
     {
         AVM_u64 pointer;
-        AVM_u16 value;
-        AVM_stack_pop(aby->threadv->stack, &value, 2);
+        AVM_u32 value;
+        AVM_stack_pop(aby->threadv->stack, &value, 4);
         AVM_stack_pop(aby->threadv->stack, &pointer, 8);
-        AVM_memory_heapset(pointer, &value, 2);
+        AVM_u16 propvalue = (AVM_u16) value;
+        AVM_memory_heapset(pointer, &propvalue, 2);
         break;
     }
     case ABY_REFL4:
@@ -193,7 +195,8 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u8 value;
         AVM_stack_pop(aby->threadv->stack, &pointer, 8);
         AVM_memory_heapget(pointer, &value, 1);
-        AVM_stack_push(aby->threadv->stack, &value, 1);
+        AVM_u32 propvalue = (AVM_u32) value;
+        AVM_stack_push(aby->threadv->stack, &propvalue, 4);
         break;
     }
     case ABY_EXTR2:
@@ -202,7 +205,8 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
         AVM_u16 value;
         AVM_stack_pop(aby->threadv->stack, &pointer, 8);
         AVM_memory_heapget(pointer, &value, 2);
-        AVM_stack_push(aby->threadv->stack, &value, 2);
+        AVM_u32 propvalue = (AVM_u32) value;
+        AVM_stack_push(aby->threadv->stack, &propvalue, 4);
         break;
     }
     case ABY_EXTR4:
@@ -691,17 +695,17 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     }
     case ABY_CI14:
     {
-        AVM_i8 i8val;
-        AVM_stack_pop(aby->threadv->stack, &i8val, 1);
-        AVM_i32 i32val = (AVM_i32) i32val;
+        AVM_i32 i8val;
+        AVM_stack_pop(aby->threadv->stack, &i8val, 4);
+        AVM_i32 i32val = (AVM_i8) i8val;
         AVM_stack_push(aby->threadv->stack, &i32val, 4);
         break;
     }
     case ABY_CI24:
     {
-        AVM_i16 i16val;
-        AVM_stack_pop(aby->threadv->stack, &i16val, 2);
-        AVM_i32 i32val = (AVM_i32) i32val;
+        AVM_i32 i16val;
+        AVM_stack_pop(aby->threadv->stack, &i16val, 4);
+        AVM_i32 i32val = (AVM_i16) i16val;
         AVM_stack_push(aby->threadv->stack, &i32val, 4);
         break;
     }
@@ -709,16 +713,16 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     {
         AVM_i32 i32val;
         AVM_stack_pop(aby->threadv->stack, &i32val, 4);
-        AVM_i8 i8val = (AVM_i8) i32val;
-        AVM_stack_push(aby->threadv->stack, &i8val, 1);
+        AVM_i32 i8val = (AVM_i8) i32val;
+        AVM_stack_push(aby->threadv->stack, &i8val, 4);
         break;
     }
     case ABY_CI42:
     {
         AVM_i32 i32val;
         AVM_stack_pop(aby->threadv->stack, &i32val, 4);
-        AVM_i16 i16val = (AVM_i16) i32val;
-        AVM_stack_push(aby->threadv->stack, &i16val, 2);
+        AVM_i32 i16val = (AVM_i32) i32val;
+        AVM_stack_push(aby->threadv->stack, &i16val, 4);
         break;
     }
     case ABY_CI48:
@@ -733,7 +737,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     {
         AVM_i64 i64val;
         AVM_stack_pop(aby->threadv->stack, &i64val, 8);
-        AVM_i32 i32val = (AVM_i32) i32val;
+        AVM_i32 i32val = (AVM_i32) i64val;
         AVM_stack_push(aby->threadv->stack, &i32val, 4);
         break;
     }
