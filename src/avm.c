@@ -32,6 +32,9 @@ int main(int argc, char** argv)
     struct AVM_ABY* aby = AVM_ABY_new(abyfile);
     fclose(abyfile);
 
+    AVM_ABY_push_nativelib(aby, AVM_nativelib_new("../asl11/Debug/libasl11"));
+    AVM_ABY_link(aby);
+
     AVM_ABY_execute(aby);
 
     AVM_ABY_free(aby);

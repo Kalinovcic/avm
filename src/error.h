@@ -34,9 +34,10 @@
 #define AVM_MASK_LOAD               (0x00620000)      // error caused by VM loading an invalid resource
 #define AVM_MASK_CODE               (0x00930000)      // error caused by invalid code, not by VM malfunction
 #define AVM_MASK_MEMORY             (0x00C70000)      // error caused by memory bugs
-#define AVM_MASK_NATIVE             (0x00DF0000)      // error caused by native malfunction
+#define AVM_MASK_LINK               (0x00E60000)      // error caused during linking
 
 #define AVM_MASK_STACK              (0x00001300)      // error is related to the stack
+#define AVM_MASK_NATIVE             (0x00002300)      // error is related to native functions
 #define AVM_MASK_ABY                (0x00006200)      // error is related to the ABY system
 #define AVM_MASK_BCODE              (0x0000A600)      // error is related to byte code
 #define AVM_MASK_HEAP               (0x0000B700)      // error is related to heap memory
@@ -46,6 +47,12 @@
 #define AVM_ERRNO_ABYFLOAD      ((AVM_MASK_FATAL     | AVM_MASK_LOAD     | AVM_MASK_ABY      ) + 0x00)     // failed to load ABY (usually unexpected EOF)
 #define AVM_ERRNO_ABYINVHD      ((AVM_MASK_FATAL     | AVM_MASK_LOAD     | AVM_MASK_ABY      ) + 0x10)     // invalid ABY header
 #define AVM_ERRNO_BCODLOAD      ((AVM_MASK_FATAL     | AVM_MASK_LOAD     | AVM_MASK_BCODE    ) + 0x00)     // failed to load byte code
+#define AVM_ERRNO_NATLIBNF      ((AVM_MASK_FATAL     | AVM_MASK_LOAD     | AVM_MASK_NATIVE   ) + 0x00)     // native library not found
+#define AVM_ERRNO_NLIBOPEN      ((AVM_MASK_FATAL     | AVM_MASK_LOAD     | AVM_MASK_NATIVE   ) + 0x10)     // failed to open native library
+#define AVM_ERRNO_NLIBCLSE      ((AVM_MASK_FATAL     | AVM_MASK_LOAD     | AVM_MASK_NATIVE   ) + 0x20)     // failed to close native library
+#define AVM_ERRNO_NLIBLFUN      ((AVM_MASK_FATAL     | AVM_MASK_LOAD     | AVM_MASK_NATIVE   ) + 0x30)     // failed to load native function from a native library
+#define AVM_ERRNO_DUPNTSYM      ((AVM_MASK_FATAL     | AVM_MASK_LINK     | AVM_MASK_NATIVE   ) + 0x30)     // duplicate native function
+#define AVM_ERRNO_NATSYMNF      ((AVM_MASK_FATAL     | AVM_MASK_LINK     | AVM_MASK_NATIVE   ) + 0x30)     // native function not found
 #define AVM_ERRNO_OUTOFMEM      ((AVM_MASK_FATAL     | AVM_MASK_MEMORY   | AVM_MASK_HEAP     ) + 0x00)     // out of memory during allocation or VM initialization
 #define AVM_ERRNO_SEGMNFLT      ((AVM_MASK_FATAL     | AVM_MASK_MEMORY   | AVM_MASK_HEAP     ) + 0x00)     // segmentation fault
 #define AVM_ERRNO_OVERFLOW      ((AVM_MASK_FATAL     | AVM_MASK_MEMORY   | AVM_MASK_STACK    ) + 0x00)     // stack overflow

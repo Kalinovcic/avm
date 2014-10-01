@@ -46,4 +46,14 @@ typedef AVM_u64  AVM_size;
 
 typedef int      AVM_bool;
 
+#ifdef _WIN32
+#define AVM_WINDOWS
+#elif __APPLE__
+#define AVM_MAC
+#elif __linux
+#define AVM_LINUX
+#else
+#error "unsupported platform"
+#endif
+
 #endif /* ATYPE_H_ */

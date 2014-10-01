@@ -23,6 +23,12 @@
 
 #include "native.h"
 
+#if defined AVM_WINDOWS
+#include <windows.h>
+#elif defined AVM_LINUX || defined AVM_MAC
+#include <dlfcn.h>
+#endif
+
 struct AVM_native* AVM_native_new(char* name)
 {
     struct AVM_native* native = malloc(sizeof(struct AVM_native));
@@ -36,7 +42,64 @@ void AVM_native_free(struct AVM_native* native)
     free(native);
 }
 
-void AVM_native_invoke(struct AVM_native* native, struct AVM_ABY* aby)
+static char* AVM_nativelib_getpath(char* name)
 {
+#if defined AVM_WINDOWS
+    char* extension = "dll";
+#elif defined AVM_MAC
+    char* extension = "dylib";
+#elif defined AVM_LINUX
+    char* extension = "so";
+#endif
+    char* path = malloc(strlen(name) + 1 + strlen(extension));
+    sprintf(path, "%s.%s", name, extension);
+    return path;
+}
 
+struct AVM_nativelib* AVM_nativelib_new(char* name)
+{
+    struct AVM_nativelib* lib = malloc(sizeof(struct AVM_nativelib));
+    char* path = AVM_nativelib_getpath(name);
+    AVM_nativelib_open(lib, path);
+    free(path);
+    return lib;
+}
+
+void AVM_nativelib_free(struct AVM_nativelib* lib)
+{
+    AVM_nativelib_close(lib);
+    free(lib);
+}
+
+void AVM_nativelib_open(struct AVM_nativelib* lib, char* path)
+{
+#if defined AVM_WINDOWS
+#error "missing support"
+#elif defined AVM_LINUX || defined AVM_MAC
+    lib->handle = dlopen(path, RTLD_LAZY);
+    char* error = dlerror();
+    if(error) AVM_abort(error, AVM_ERRNO_NLIBOPEN);
+#endif
+}
+
+void AVM_nativelib_close(struct AVM_nativelib* lib)
+{
+#if defined AVM_WINDOWS
+#error "missing support"
+#elif defined AVM_LINUX || defined AVM_MAC
+    dlclose(lib->handle);
+    char* error = dlerror();
+    if(error) AVM_abort(error, AVM_ERRNO_NLIBCLSE);
+#endif
+}
+
+AVM_native_proto AVM_nativelib_load(struct AVM_nativelib* lib, char* symbol)
+{
+#if defined AVM_WINDOWS
+#error "missing support"
+#elif defined AVM_LINUX || defined AVM_MAC
+    AVM_native_proto proto = (AVM_native_proto) dlsym(lib->handle, symbol);
+    // missing error handling
+    return proto;
+#endif
 }

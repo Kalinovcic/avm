@@ -830,7 +830,7 @@ void AVM_ABYexecutor_nextrun(struct AVM_ABY* aby)
     {
         AVM_u32 native;
         AVM_bytecode_next(aby->threadv->bcode, &aby->threadv->pc, &native, 4);
-        AVM_native_invoke(aby->nativev[native], aby);
+        aby->nativev[native]->cfunc(aby);
         break;
     }
     case ABY_IF:

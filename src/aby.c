@@ -64,6 +64,7 @@ struct AVM_ABY* AVM_ABY_new(FILE* pF)
         struct AVM_native* native = AVM_native_new(native_name);
         aby->nativev[i] = native;
     }
+    aby->nativelib = NULL;
 
     AVM_ABY_FREAD(aby->bcodec, pF);
     aby->bcodev = malloc(sizeof(void*) * aby->bcodec);
@@ -96,6 +97,13 @@ void AVM_ABY_free(struct AVM_ABY* aby)
 {
     AVM_u32 i;
 
+    struct AVM_nativelib* lib = aby->nativelib;
+    while(lib)
+    {
+        AVM_nativelib_free(lib);
+        lib = lib->next;
+    }
+
     for(i = 0; i < aby->nativec; i++)
         AVM_native_free(aby->nativev[i]);
     free(aby->nativev);
@@ -114,6 +122,36 @@ void AVM_ABY_free(struct AVM_ABY* aby)
     AVM_memory_free(aby->globalmem);
 
     free(aby);
+}
+
+void AVM_ABY_link(struct AVM_ABY* aby)
+{
+    AVM_u32 i;
+    for(i = 0; i < aby->nativec; i++)
+    {
+        AVM_native_proto cfunc = NULL;
+        struct AVM_nativelib* lib = aby->nativelib;
+        while(lib)
+        {
+            AVM_native_proto curr = AVM_nativelib_load(lib, aby->nativev[i]->name);
+            if(curr)
+            {
+                if(cfunc)
+                    AVM_abort("duplicate native function", AVM_ERRNO_DUPNTSYM);
+                cfunc = curr;
+            }
+            lib = lib->next;
+        }
+        if(!cfunc)
+            AVM_abort("native function not found", AVM_ERRNO_NATSYMNF);
+        aby->nativev[i]->cfunc = cfunc;
+    }
+}
+
+void AVM_ABY_push_nativelib(struct AVM_ABY* aby, struct AVM_nativelib* lib)
+{
+    lib->next = aby->nativelib;
+    aby->nativelib = lib;
 }
 
 void AVM_ABY_execute(struct AVM_ABY* aby)

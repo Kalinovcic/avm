@@ -38,6 +38,7 @@ struct AVM_ABY
     AVM_u8 stop;
 
     struct AVM_native** nativev;
+    struct AVM_nativelib* nativelib;
     AVM_u32 nativec;
 
     struct AVM_bytecode** bcodev;
@@ -55,6 +56,9 @@ struct AVM_ABY
 
 struct AVM_ABY* AVM_ABY_new(FILE* pF);
 void AVM_ABY_free(struct AVM_ABY* aby);
+
+void AVM_ABY_link(struct AVM_ABY* aby);
+void AVM_ABY_push_nativelib(struct AVM_ABY* aby, struct AVM_nativelib* lib);
 
 void AVM_ABY_execute(struct AVM_ABY* aby);
 void AVM_ABY_next_thread(struct AVM_ABY* aby);

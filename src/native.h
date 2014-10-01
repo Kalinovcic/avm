@@ -27,15 +27,31 @@
 #include "aby.h"
 
 #include <stdlib.h>
+#include <stdio.h>
+
+typedef void (*AVM_native_proto)(void*);
 
 struct AVM_native
 {
     char* name;
+    AVM_native_proto cfunc;
+};
+
+struct AVM_nativelib
+{
+    void* handle;
+    struct AVM_nativelib* next;
 };
 
 struct AVM_native* AVM_native_new(char* name);
 void AVM_native_free(struct AVM_native* native);
 
-void AVM_native_invoke(struct AVM_native* native, struct AVM_ABY* aby);
+struct AVM_nativelib* AVM_nativelib_new(char* name);
+void AVM_nativelib_free(struct AVM_nativelib* lib);
+
+void AVM_nativelib_open(struct AVM_nativelib* lib, char* path);
+void AVM_nativelib_close(struct AVM_nativelib* lib);
+
+AVM_native_proto AVM_nativelib_load(struct AVM_nativelib* lib, char* symbol);
 
 #endif /* NATIVE_H_ */
